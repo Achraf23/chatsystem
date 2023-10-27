@@ -1,30 +1,24 @@
 public class ContactList {
 
-    private Array<string> listOfContacts;
+    private ArrayList<String> listOfContacts;
 
     //Implementer InitContactList, a contructor for ContactList, to initialize listOfContacts
 
     //Verify that the nickname is Unique
     //add context
-    public boolean isUnique(string nickname){
-        for (contact:listOfContacts) {
-            if ( nickname == contact) {
-                return false
-            }
-        }
-        return true;
+    public boolean isUnique(String nickname){
+        return !listOfContacts.contains(nickname);
     }
 
     public ContactList(){
+        listOfContacts = new ArrayList<String> ();
         //Recoie les messages des autres utilisateurs
-        //
-
+        //Ajoute les pseudo recu dans listOfContacts
     }
 
-    public void tryConnection(string nickname){
+    public void tryConnection(String nickname){
         //Dès réception d'une demande de connexion du User
         //Renvoie erreur ?
         //Call isUnique()
-        //
     }
 }
