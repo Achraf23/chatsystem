@@ -4,7 +4,7 @@ public class ClientHandler {
         //to request the passwords
     }
 
-    public void BroadcastNickname(string Pseudo){
+    public void BroadcastNickname(String Pseudo){
         // To update other users' ContacList
     }
 }
