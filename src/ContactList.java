@@ -1,17 +1,18 @@
-public class ContactList {
+import java.util.ArrayList;
 
-    private Array<string> listOfContacts;
+public class ContactList {
+    ArrayList ContactList = new ArrayList();
 
     //Implementer InitContactList, a contructor for ContactList, to initialize listOfContacts
 
     //Verify that the nickname is Unique
     //add context
-    public boolean isUnique(string nickname){
-        for (contact:listOfContacts) {
+    public boolean isUnique(String nickname){
+        /*for () {
             if ( nickname == contact) {
-                return false
+                return false;
             }
-        }
+        }*/
         return true;
     }
 
@@ -21,10 +22,10 @@ public class ContactList {
 
     }
 
-    public void tryConnection(string nickname){
+    public void tryConnection(String nickname){
         //Dès réception d'une demande de connexion du User
         //Renvoie erreur ?
         //Call isUnique()
-        //
+
     }
 }
