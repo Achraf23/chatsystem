@@ -1,9 +1,11 @@
-package Model;
+package ContactDiscovery;
 import java.util.ArrayList;
 import java.net.*;
 import java.io.*;
-import java.nio.charset.StandardCharsets;
+
 public class EchoOtherUsers {
+
+    static  final int Broadcast_Port=6666;
 
     public void listenOtherUsers() {
         //Implemente un thread
@@ -22,6 +24,7 @@ public class EchoOtherUsers {
         server.start();
     }
 
+
     private static class EchoServer extends Thread {
 
         private DatagramSocket socket;
@@ -29,7 +32,7 @@ public class EchoOtherUsers {
         private byte[] buf = new byte[256];
 
         public EchoServer() throws  SocketException{
-            socket = new DatagramSocket(6666);
+            socket = new DatagramSocket(Broadcast_Port);
         }
 
         public void run() {
@@ -46,18 +49,32 @@ public class EchoOtherUsers {
 
                 }
 
-                // byte[] to string
+                //Verification
+                try{
+                    if(!packet.getAddress().equals(InetAddress.getLocalHost())){
+                        String received
+                                = new String(packet.getData(), 0, packet.getLength());
+                        System.out.println(received);
 
-                InetAddress address = packet.getAddress();
-                int port = packet.getPort();
-                packet = new DatagramPacket(buf, buf.length, address, port);
-                String received
-                        = new String(packet.getData(), 0, packet.getLength());
 
-                if (received.equals("end")) {
-                    running = false;
-                    continue;
+                        if(received.equals("Hello"))
+                            System.out.println("broadcast");
+                        else System.out.println("Received wrong broadcast message");
+
+                        InetAddress address = packet.getAddress();
+                        int port = packet.getPort();
+                        packet = new DatagramPacket(buf, buf.length, address, port);
+
+
+                        if (received.equals("end")) {
+                            running = false;
+                        }
+                    }
+
+                }catch (UnknownHostException u){
+                    System.out.println("Unknown host exception when getLocalHost invoked");
                 }
+
 
 //                try{
 //                    socket.send(packet);

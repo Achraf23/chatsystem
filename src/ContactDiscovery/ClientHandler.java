@@ -1,5 +1,4 @@
-package Model;
-import javax.xml.crypto.Data;
+package ContactDiscovery;
 import java.net.*;
 import java.io.*;
 
@@ -20,7 +19,7 @@ public class ClientHandler {
 
 
     class BroadcastingClient {
-        public static DatagramSocket socket = null;
+        private static DatagramSocket socket = null;
 
 
         public static void broadcast(
@@ -31,8 +30,9 @@ public class ClientHandler {
             byte[] buffer = broadcastMessage.getBytes();
 
             DatagramPacket packet
-                    = new DatagramPacket(buffer, buffer.length, address, 6666);
+                    = new DatagramPacket(buffer, buffer.length, address, EchoOtherUsers.Broadcast_Port);
             socket.send(packet);
+
             socket.close();
         }
     }

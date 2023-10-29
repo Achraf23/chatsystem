@@ -1,4 +1,4 @@
-package Model;
+package ContactDiscovery;
 
 import java.util.ArrayList;
 

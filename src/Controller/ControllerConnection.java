@@ -1,5 +1,5 @@
 package Controller;
-import Model.ContactList;
+import ContactDiscovery.ContactList;
 
 public class ControllerConnection {
     public void tryConnection(String nickname){
