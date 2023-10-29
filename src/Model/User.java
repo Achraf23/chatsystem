@@ -1,3 +1,5 @@
+package Model;
+
 public class User {
     //Récuperer l'adresse IP par un getter
     private String ip;

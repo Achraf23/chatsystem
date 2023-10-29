@@ -1,3 +1,5 @@
+package Model;
+
 import java.net.*;
 import java.io.*;
 
@@ -52,7 +54,6 @@ public class Client {
     }
 
 
-
     public static void main(String[] args) throws IOException {
         Client client1=new Client();
         client1.startConnection("127.0.0.1", 6666);
@@ -74,8 +75,6 @@ public class Client {
         }
 
         client1.stopConnection();
-
-
 
     }
 }
