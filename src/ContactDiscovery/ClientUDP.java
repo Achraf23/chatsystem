@@ -2,10 +2,21 @@ package ContactDiscovery;
 import java.net.*;
 import java.io.*;
 
-public class ClientHandler {
+public class ClientUDP {
 
-    public void BroadcastConnection() {
+    public void BroadcastConnection() throws IOException{
+
+        InetAddress addr=null;
+        try{
+             addr = InetAddress.getByName("255.255.255.255");
+
+        }catch (UnknownHostException e){
+            System.out.println("error can't find broadcast addresses name");
+            throw e;
+        }
         //to request the passwords
+        BroadcastingClient.broadcast("Hello", addr);
+
     }
 
     public void BroadcastNickname(String Pseudo){
@@ -13,7 +24,7 @@ public class ClientHandler {
     }
 
     public static void main(String[] args) throws IOException {
-        BroadcastingClient.broadcast("Hello", InetAddress.getByName("255.255.255.255"));
+        System.out.println(InetAddress.getLocalHost().toString());
 
     }
 
@@ -30,7 +41,7 @@ public class ClientHandler {
             byte[] buffer = broadcastMessage.getBytes();
 
             DatagramPacket packet
-                    = new DatagramPacket(buffer, buffer.length, address, EchoOtherUsers.Broadcast_Port);
+                    = new DatagramPacket(buffer, buffer.length, address, ServerUDP.Broadcast_Port);
             socket.send(packet);
 
             socket.close();

@@ -3,16 +3,17 @@ import java.util.ArrayList;
 import java.net.*;
 import java.io.*;
 
-public class EchoOtherUsers {
+public class ServerUDP {
 
     static  final int Broadcast_Port=6666;
 
-    public void listenOtherUsers() {
-        //Implemente un thread
-
+    public void listenOtherUsers() throws SocketException{
         //different scénario ?
-            //demande d'envoyer son pseudo
-            //Updater la contactList
+        //demande d'envoyer son pseudo
+        //Updater la contactList
+
+        EchoServer server = new EchoServer();
+        server.start();
     }
 
     public void updateContactList( ArrayList<String> listOfContacts) {
@@ -57,8 +58,11 @@ public class EchoOtherUsers {
                         System.out.println(received);
 
 
-                        if(received.equals("Hello"))
+                        if(received.equals("Hello")){
                             System.out.println("broadcast");
+
+
+                        }
                         else System.out.println("Received wrong broadcast message");
 
                         InetAddress address = packet.getAddress();
