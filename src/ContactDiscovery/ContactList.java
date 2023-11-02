@@ -21,6 +21,10 @@ public class ContactList {
         return contactList;
     }
 
+    public void addLine(String s){
+        table.add(s);
+    }
+
     //Verify that the nickname is Unique
     //add context
     public boolean isUnique(String nickname){

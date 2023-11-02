@@ -1,5 +1,6 @@
 package ContactDiscovery;
 
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
@@ -26,6 +27,8 @@ public class User {
 
         return user;
     }
+
+    public String getIP(){return this.ip;}
 
 
 
