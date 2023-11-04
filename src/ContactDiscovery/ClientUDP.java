@@ -41,7 +41,7 @@ public class ClientUDP {
             byte[] buffer = broadcastMessage.getBytes();
 
             DatagramPacket packet
-                    = new DatagramPacket(buffer, buffer.length, address, ServerUDP.Broadcast_Port);
+                    = new DatagramPacket(buffer, buffer.length, address, EchoServer.Broadcast_Port);
             socket.send(packet);
 
             socket.close();

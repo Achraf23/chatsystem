@@ -1,7 +1,6 @@
 package Controller;
 import ContactDiscovery.ClientUDP;
-import ContactDiscovery.ContactList;
-import ContactDiscovery.ServerUDP;
+import ContactDiscovery.EchoServer;
 
 import java.io.IOException;
 
@@ -13,8 +12,7 @@ public class ConnectionController {
         ClientUDP c =new ClientUDP();
         c.BroadcastConnection();
 
-        ServerUDP server = new ServerUDP();
-        server.listenOtherUsers();
+        EchoServer server = new EchoServer();
 
 
 
