@@ -64,7 +64,7 @@ public class EchoServer extends Thread {
                         //Not a broadcast ==> Save new pseudo user
                         String elt=received+"/"+packet.getAddress().toString();
                         System.out.println("elt="+elt);
-                        ContactList.getInstance().addLine(elt);
+                        ContactList.getInstance().addLine(received,packet.getAddress().toString());
 
 
                     }

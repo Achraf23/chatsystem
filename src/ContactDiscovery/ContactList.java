@@ -6,12 +6,12 @@ import java.util.ArrayList;
 public class ContactList {
 
     private static ContactList contactList = null;
-    private ArrayList<String> table;
+    public ArrayList<PseudoIP> table;
 
     //Implementer InitContactList, a contructor for Model.ContactList, to initialize listOfContacts
 
     public ContactList(){
-        this.table = new ArrayList<String>();
+        this.table = new ArrayList<PseudoIP>();
     }
 
     public static synchronized ContactList getInstance () {
@@ -21,8 +21,8 @@ public class ContactList {
         return contactList;
     }
 
-    public void addLine(String s){
-        table.add(s);
+    public void addLine(String pseudo,String ip){
+        table.add(new PseudoIP(pseudo,ip));
     }
 
 
