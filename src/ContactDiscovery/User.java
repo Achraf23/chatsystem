@@ -14,7 +14,7 @@ public class User {
     private static User user = null;
 
 
-    User() throws UnknownHostException {
+    public User() throws UnknownHostException {
             this.ip=InetAddress.getLocalHost().getHostAddress().toString();
     }
 

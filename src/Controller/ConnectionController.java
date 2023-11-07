@@ -2,10 +2,18 @@ package Controller;
 import ContactDiscovery.ClientUDP;
 import ContactDiscovery.ContactList;
 import ContactDiscovery.EchoServer;
+import ContactDiscovery.User;
 
 import java.io.IOException;
+import java.net.UnknownHostException;
 
 public class ConnectionController {
+
+    User u;
+
+    ConnectionController() throws UnknownHostException{
+        u = new User(); // if exception, will be thrown in User
+    }
     public void tryConnection(String nickname) throws IOException {
         //Dès réception d'une demande de connexion du Model.User
         //Renvoie erreur ?
@@ -14,9 +22,12 @@ public class ConnectionController {
         c.BroadcastConnection();
 
         EchoServer server = new EchoServer();
-
-
-
+        if(isUnique(nickname)){
+            ContactList.getInstance().addLine(nickname,u.getIP());
+            u.nickname = nickname;
+        }else{
+            throw new IOException("Connection Failed");
+        }
 
 
     }
