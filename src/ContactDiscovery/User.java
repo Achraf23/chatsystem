@@ -15,7 +15,7 @@ public class User {
 
 
     public User() throws UnknownHostException {
-            this.ip=InetAddress.getLocalHost().getHostAddress().toString();
+            this.ip=InetAddress.getLocalHost().getHostAddress();
     }
 
     public static synchronized User getInstance () throws UnknownHostException

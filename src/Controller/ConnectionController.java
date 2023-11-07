@@ -15,19 +15,22 @@ public class ConnectionController {
         u = new User(); // if exception, will be thrown in User
     }
     public void tryConnection(String nickname) throws IOException {
-        //Dès réception d'une demande de connexion du Model.User
-        //Renvoie erreur ?
-        //Call isUnique()
+        //send broadcast to retrieve connected users nickname
         ClientUDP c =new ClientUDP();
         c.BroadcastConnection();
 
+        // Launch server to get their answers
         EchoServer server = new EchoServer();
         if(isUnique(nickname)){
-            ContactList.getInstance().addLine(nickname,u.getIP());
             u.nickname = nickname;
         }else{
             throw new IOException("Connection Failed");
         }
+
+        // send my pseudo only if there are other users connected
+        if(!ContactList.getInstance().table.isEmpty())
+            c.sendPseudoConnection(u.nickname);
+        else System.out.println("I'm the only one");
 
 
     }

@@ -1,6 +1,7 @@
 package ContactDiscovery;
 import java.net.*;
 import java.io.*;
+import java.util.ArrayList;
 
 public class ClientUDP {
 
@@ -8,14 +9,46 @@ public class ClientUDP {
 
         InetAddress addr=null;
         try{
-             addr = InetAddress.getByName("255.255.255.255");
+            addr = InetAddress.getByName("255.255.255.255");
+            BroadcastingClient.broadcast("Hello", addr);
 
         }catch (UnknownHostException e){
             System.out.println("error can't find broadcast addresses name");
             throw e;
         }
-        //to request the passwords
-        BroadcastingClient.broadcast("Hello", addr);
+
+    }
+
+    public void sendPseudoConnection(String pseudo) {
+        ArrayList<PseudoIP> table=ContactList.getInstance().table;
+        DatagramPacket outPacket;
+        try{
+            DatagramSocket socket= new DatagramSocket();
+
+            for(int i=0;i<table.size();i++){
+                try {
+                    InetAddress addr_dest = InetAddress.getByName(table.get(i).ip);
+                    outPacket = new DatagramPacket(pseudo.getBytes(), pseudo.getBytes().length,
+                            addr_dest, EchoServer.Server_Port);
+                    try {
+                        socket.send(outPacket);
+
+                    }catch (IOException e){
+                        System.out.println("Send packet exception send pseudo method");
+                    }
+
+                }catch (UnknownHostException e){
+                    System.out.println("Unknown host except send pseudo method");
+                }
+
+            }
+            socket.close();
+
+        }catch (SocketException s){
+            System.out.println("Socket exception send pseudo method");
+        }
+
+
 
     }
 
@@ -41,7 +74,7 @@ public class ClientUDP {
             byte[] buffer = broadcastMessage.getBytes();
 
             DatagramPacket packet
-                    = new DatagramPacket(buffer, buffer.length, address, EchoServer.Broadcast_Port);
+                    = new DatagramPacket(buffer, buffer.length, address, EchoServer.Server_Port);
             socket.send(packet);
 
             socket.close();

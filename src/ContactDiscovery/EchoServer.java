@@ -9,7 +9,7 @@ public class EchoServer extends Thread {
     private DatagramSocket socket;
     private boolean running;
     private byte[] buf = new byte[256];
-    static  final int Broadcast_Port=6666;
+    static  final int Server_Port=6666;
 
     public static void main(String[] args) throws IOException {
         EchoServer server = new EchoServer();
@@ -18,7 +18,7 @@ public class EchoServer extends Thread {
 
     public EchoServer() throws SocketException{
 
-        socket = new DatagramSocket(Broadcast_Port);
+        socket = new DatagramSocket(Server_Port);
         this.start();
     }
 
@@ -50,7 +50,7 @@ public class EchoServer extends Thread {
                         InetAddress address = packet.getAddress();
                         int port = packet.getPort();
                         String pseudo = "test";
-                        packet = new DatagramPacket(pseudo.getBytes(), pseudo.length(), address, port);
+                        packet = new DatagramPacket(pseudo.getBytes(), pseudo.length(), address, Server_Port);
                         System.out.println(new String(packet.getData(), StandardCharsets.UTF_8));
 
                         try{
