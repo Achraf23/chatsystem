@@ -49,7 +49,7 @@ public class EchoServer extends Thread {
                         //sends pseudo after receiving broadcast
                         InetAddress address = packet.getAddress();
                         int port = packet.getPort();
-                        String pseudo = "test";
+                        String pseudo = User.getInstance().nickname;
                         packet = new DatagramPacket(pseudo.getBytes(), pseudo.length(), address, Server_Port);
                         System.out.println(new String(packet.getData(), StandardCharsets.UTF_8));
 
