@@ -11,17 +11,21 @@ import java.net.UnknownHostException;
 public class ConnectionController {
 
     User u;
+    ClientUDP c;
+    EchoServer server;
+
 
     ConnectionController() throws IOException{
         u = User.getInstance(); // if exception, will be thrown in User
+        c =new ClientUDP();
+        server = new EchoServer();
+
     }
     public void tryConnection(String nickname) throws IOException {
-        //send broadcast to retrieve connected users nickname
 
-        // Launch server to get their answers
-        EchoServer server = new EchoServer();
-        ClientUDP c =new ClientUDP();
-        c.BroadcastConnection();
+
+        server.start(); ///launch server to listen to other users
+        c.BroadcastConnection();        //send broadcast to retrieve connected users nickname
 
         //waiting a bit for the contactList to be initialized
         try {
@@ -43,6 +47,11 @@ public class ConnectionController {
         if(!ContactList.getInstance().table.isEmpty())
             c.sendMsgToOthers(u.nickname);
         else System.out.println("I'm the only one");
+
+
+    }
+
+    public void logOut(){
 
 
     }

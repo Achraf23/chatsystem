@@ -2,6 +2,7 @@ package ContactDiscovery;
 import java.net.*;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 
 
 public class EchoServer extends Thread {
@@ -20,7 +21,17 @@ public class EchoServer extends Thread {
     public EchoServer() throws SocketException{
 
         socket = new DatagramSocket(Server_Port);
-        this.start();
+    }
+
+    boolean findAndRemove(String ip){
+        ArrayList<PseudoIP> table = ContactList.getInstance().table;
+        for(int i=0;i<table.size();i++){
+            if(table.get(i).ip.equals(ip)){
+                table.remove(i);
+                return true;
+            }
+        }
+        return false;
     }
 
     public void run() {
