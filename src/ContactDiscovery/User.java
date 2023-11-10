@@ -17,7 +17,7 @@ public class User {
     private static User user = null;
 
 
-    public User() throws IOException {
+    private User() throws IOException {
 //            this.ip=InetAddress.getLocalHost().getHostAddress();
         Enumeration e = NetworkInterface.getNetworkInterfaces();
         if(e.hasMoreElements()){

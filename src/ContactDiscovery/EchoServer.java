@@ -11,9 +11,10 @@ public class EchoServer extends Thread {
     private byte[] buf = new byte[256];
     static  final int Server_Port=8080;
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws Exception {
         EchoServer server = new EchoServer();
-        server.start();
+
+
     }
 
     public EchoServer() throws SocketException{
@@ -29,23 +30,24 @@ public class EchoServer extends Thread {
             DatagramPacket packet
                     = new DatagramPacket(buf, buf.length);
 
-            try{
+            try {
                 socket.receive(packet);
                 System.out.println("after receiving");
-            }catch (IOException e){
+            } catch (IOException e) {
                 System.out.println("receive method error");
 
             }
 
             //make sure not to receive its own broadcast
-            try{
 
-                if(!packet.getAddress().equals(InetAddress.getLocalHost())){
+            try {
+                InetAddress i = InetAddress.getByName(User.getInstance().getIP());
+                if (!packet.getAddress().equals(i)) {
                     System.out.println("ici");
                     String received
                             = new String(packet.getData(), 0, packet.getLength());
 
-                    if(received.equals("Hello")){
+                    if (received.equals("Hello")) {
                         System.out.println("broadcast received");
 
                         //sends pseudo after receiving broadcast
@@ -55,25 +57,26 @@ public class EchoServer extends Thread {
                         try {
                             pseudo = User.getInstance().nickname;
                             packet = new DatagramPacket(pseudo.getBytes(), pseudo.length(), address, Server_Port);
-                            System.out.println(new String(packet.getData(), StandardCharsets.UTF_8));
 
-                            try{
-                                System.out.println("sending pseudo");
+                            try {
+                                System.out.println("sending pseudo: "+new String(packet.getData(), StandardCharsets.UTF_8));
                                 socket.send(packet);
-                            }catch (IOException e){
+                            } catch (IOException e) {
                                 System.out.println("send method error");
                             }
-                        }catch (IOException e){
+                        } catch (IOException e) {
                             System.out.println("exception ip address echo server");
                         }
 
 
-
-                    }else{
+                    } else {
                         //Not a broadcast ==> Save new pseudo user
-                        String elt=received+"/"+packet.getAddress().toString();
-                        System.out.println("elt="+elt);
-                        ContactList.getInstance().addLine(received,packet.getAddress().toString());
+                        String elt = received + "/" + packet.getAddress().toString();
+                        System.out.println("elt=" + elt);
+                        String string = packet.getAddress().toString();
+                        String[] parts = string.split("/");
+                        String part2 = parts[1];
+                        ContactList.getInstance().addLine(received, part2);
 
 
                     }
@@ -82,12 +85,16 @@ public class EchoServer extends Thread {
                     if (received.equals("end")) {
                         running = false;
                     }
-                }else System.out.println("received same address");
+                } else System.out.println("received same address");
 
 
-            }catch (UnknownHostException u){
-                System.out.println("Unknown host exception when getLocalHost invoked");
+            } catch (IOException i) {
+                System.out.println("stop thread");
+                this.interrupt();
+
             }
+
+
 
 
 
