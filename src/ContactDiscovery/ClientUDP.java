@@ -27,7 +27,9 @@ public class ClientUDP {
 
             for(int i=0;i<table.size();i++){
                 try {
+                    System.out.println(table.get(i).ip);
                     InetAddress addr_dest = InetAddress.getByName(table.get(i).ip);
+
                     outPacket = new DatagramPacket(pseudo.getBytes(), pseudo.getBytes().length,
                             addr_dest, EchoServer.Server_Port);
                     try {

@@ -9,7 +9,7 @@ public class EchoServer extends Thread {
     private DatagramSocket socket;
     private boolean running;
     private byte[] buf = new byte[256];
-    static  final int Server_Port=6666;
+    static  final int Server_Port=8080;
 
     public static void main(String[] args) throws IOException {
         EchoServer server = new EchoServer();
@@ -39,6 +39,7 @@ public class EchoServer extends Thread {
 
             //make sure not to receive its own broadcast
             try{
+                System.out.println("checking if its equal to this address : "+InetAddress.getLocalHost());
                 if(!packet.getAddress().equals(InetAddress.getLocalHost())){
                     String received
                             = new String(packet.getData(), 0, packet.getLength());

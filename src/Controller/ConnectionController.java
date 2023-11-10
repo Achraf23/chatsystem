@@ -16,20 +16,22 @@ public class ConnectionController {
     }
     public void tryConnection(String nickname) throws IOException {
         //send broadcast to retrieve connected users nickname
-        ClientUDP c =new ClientUDP();
-        c.BroadcastConnection();
+
 
         // Launch server to get their answers
         EchoServer server = new EchoServer();
+        ClientUDP c =new ClientUDP();
+        c.BroadcastConnection();
+
+        System.out.println(ContactList.getInstance().table.size());
         if(isUnique(nickname)){
             u.nickname = nickname;
         }else{
             throw new IOException("Connection Failed");
         }
-
         // send my pseudo only if there are other users connected
         if(!ContactList.getInstance().table.isEmpty())
-            c.sendPseudoConnection(u.nickname);
+            c.sendPseudoConnection("windows");
         else System.out.println("I'm the only one");
 
 
