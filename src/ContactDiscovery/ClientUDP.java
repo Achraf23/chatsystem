@@ -54,12 +54,11 @@ public class ClientUDP {
 
     }
 
-    public void BroadcastNickname(String Pseudo){
-        // To update other users' ContacList
-    }
 
     public static void main(String[] args) throws IOException {
-        System.out.println(InetAddress.getLocalHost().toString());
+//        ClientUDP c =new ClientUDP();
+//        c.BroadcastConnection()
+        InetAddress addr_dest = InetAddress.getByName("10.1.1.65");
 
     }
 
