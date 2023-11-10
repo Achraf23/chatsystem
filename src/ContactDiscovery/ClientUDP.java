@@ -19,7 +19,7 @@ public class ClientUDP {
 
     }
 
-    public void sendPseudoConnection(String pseudo) {
+    public void sendMsgToOthers(String msg) {
         ArrayList<PseudoIP> table=ContactList.getInstance().table;
         DatagramPacket outPacket;
         try{
@@ -30,7 +30,7 @@ public class ClientUDP {
                     System.out.println(table.get(i).ip);
                     InetAddress addr_dest = InetAddress.getByName(table.get(i).ip);
 
-                    outPacket = new DatagramPacket(pseudo.getBytes(), pseudo.getBytes().length,
+                    outPacket = new DatagramPacket(msg.getBytes(), msg.getBytes().length,
                             addr_dest, EchoServer.Server_Port);
                     try {
                         socket.send(outPacket);

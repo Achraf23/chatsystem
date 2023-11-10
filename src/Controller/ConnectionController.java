@@ -41,7 +41,7 @@ public class ConnectionController {
         System.out.println(User.getInstance().nickname);
         // send my pseudo only if there are other users connected
         if(!ContactList.getInstance().table.isEmpty())
-            c.sendPseudoConnection(u.nickname);
+            c.sendMsgToOthers(u.nickname);
         else System.out.println("I'm the only one");
 
 
