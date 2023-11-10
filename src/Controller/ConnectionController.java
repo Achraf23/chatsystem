@@ -42,7 +42,7 @@ public class ConnectionController {
             throw new IOException("Connection Failed");
         }
 
-        System.out.println(User.getInstance().nickname);
+        System.out.println("nickname="+User.getInstance().nickname);
         // send my pseudo only if there are other users connected
         if(!ContactList.getInstance().table.isEmpty())
             c.sendMsgToOthers(u.nickname);
@@ -51,8 +51,11 @@ public class ConnectionController {
 
     }
 
-    public void logOut(){
-
+    public void logOut() throws InterruptedException{
+        ContactList.getInstance().addLine("p1","10.1.5.155");
+        c.sendMsgToOthers("disconnect");
+        Thread.sleep(100);
+        server.interrupt();
 
     }
     public static void main(String[] args) throws IOException {

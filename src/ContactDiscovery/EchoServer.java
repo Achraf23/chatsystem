@@ -81,21 +81,41 @@ public class EchoServer extends Thread {
 
 
                     } else {
-                        //Not a broadcast ==> Save new pseudo user
-                        String elt = received + "/" + packet.getAddress().toString();
-                        System.out.println("elt=" + elt);
                         String string = packet.getAddress().toString();
+                        System.out.println("ip="+string);
                         String[] parts = string.split("/");
                         String part2 = parts[1];
-                        ContactList.getInstance().addLine(received, part2);
+
+
+                        switch (received) {
+                            case "disconnect":
+                                System.out.println("received disconnect");
+                                if (!findAndRemove(part2)){
+                                    System.out.println("ip not found in ContactList");
+                                }else {
+                                    packet = new DatagramPacket("OK".getBytes(), "OK".length(), packet.getAddress(), Server_Port);
+                                    socket.send(packet);
+                                }
+                                break;
+                            case "OK":
+                                if (!findAndRemove(part2)){
+                                    System.out.println("ip not found in ContactList");
+                                }else System.out.println("oui");
+
+                                break;
+
+                            default:
+                                //Not a broadcast ==> Save new pseudo user
+                                String elt = received + "/" + packet.getAddress().toString();
+                                System.out.println("elt=" + elt);
+
+                                ContactList.getInstance().addLine(received, part2);
+                        }
 
 
                     }
 
 
-                    if (received.equals("end")) {
-                        running = false;
-                    }
                 } else System.out.println("received same address");
 
 
@@ -104,9 +124,6 @@ public class EchoServer extends Thread {
                 this.interrupt();
 
             }
-
-
-
 
 
         }
