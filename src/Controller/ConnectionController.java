@@ -5,19 +5,20 @@ import ContactDiscovery.EchoServer;
 import ContactDiscovery.User;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 public class ConnectionController {
 
     User u;
 
-    ConnectionController() throws UnknownHostException{
+    ConnectionController() throws IOException{
         u = new User(); // if exception, will be thrown in User
     }
     public void tryConnection(String nickname) throws IOException {
         //send broadcast to retrieve connected users nickname
 
-
+        System.out.println(InetAddress.getLocalHost());
         // Launch server to get their answers
         EchoServer server = new EchoServer();
         ClientUDP c =new ClientUDP();

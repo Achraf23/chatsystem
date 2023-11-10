@@ -39,8 +39,9 @@ public class EchoServer extends Thread {
 
             //make sure not to receive its own broadcast
             try{
-                System.out.println("checking if its equal to this address : "+InetAddress.getLocalHost());
+
                 if(!packet.getAddress().equals(InetAddress.getLocalHost())){
+                    System.out.println("ici");
                     String received
                             = new String(packet.getData(), 0, packet.getLength());
 
@@ -50,16 +51,23 @@ public class EchoServer extends Thread {
                         //sends pseudo after receiving broadcast
                         InetAddress address = packet.getAddress();
                         int port = packet.getPort();
-                        String pseudo = User.getInstance().nickname;
-                        packet = new DatagramPacket(pseudo.getBytes(), pseudo.length(), address, Server_Port);
-                        System.out.println(new String(packet.getData(), StandardCharsets.UTF_8));
+                        String pseudo;
+                        try {
+                            pseudo = User.getInstance().nickname;
+                            packet = new DatagramPacket(pseudo.getBytes(), pseudo.length(), address, Server_Port);
+                            System.out.println(new String(packet.getData(), StandardCharsets.UTF_8));
 
-                        try{
-                            System.out.println("sending pseudo");
-                            socket.send(packet);
+                            try{
+                                System.out.println("sending pseudo");
+                                socket.send(packet);
+                            }catch (IOException e){
+                                System.out.println("send method error");
+                            }
                         }catch (IOException e){
-                            System.out.println("send method error");
+                            System.out.println("exception ip address echo server");
                         }
+
+
 
                     }else{
                         //Not a broadcast ==> Save new pseudo user
