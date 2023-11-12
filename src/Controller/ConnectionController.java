@@ -51,16 +51,16 @@ public class ConnectionController {
 
     }
 
-    public void logOut() throws InterruptedException{
-        ContactList.getInstance().addLine("p1","10.1.5.155");
+    public void logOut() throws Exception{
         c.sendMsgToOthers("disconnect");
         Thread.sleep(100);
-        server.interrupt();
-
+        c.endConnection();
     }
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws Exception {
         ConnectionController c = new ConnectionController();
-        c.tryConnection("b");
+        c.tryConnection("a");
+        c.logOut();
+
     }
 
     boolean isUnique(String pseudo){

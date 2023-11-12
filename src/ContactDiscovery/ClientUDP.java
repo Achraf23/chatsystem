@@ -6,6 +6,7 @@ import java.util.ArrayList;
 public class ClientUDP {
 
     private DatagramSocket socket = null;
+    DatagramPacket outPacket = null;
 
     public void broadcastConnection(String broadcastMessage) throws IOException{
 
@@ -15,16 +16,15 @@ public class ClientUDP {
 
         byte[] buffer = broadcastMessage.getBytes();
 
-        DatagramPacket packet
+        outPacket
                 = new DatagramPacket(buffer, buffer.length,addr,EchoServer.Server_Port);
-        socket.send(packet);
+        socket.send(outPacket);
 
         socket.close();
     }
 
     public void sendMsgToOthers(String msg) {
         ArrayList<PseudoIP> table=ContactList.getInstance().table;
-        DatagramPacket outPacket;
         try{
             socket= new DatagramSocket();
 
@@ -54,6 +54,14 @@ public class ClientUDP {
         }
 
 
+    }
+
+    public void endConnection() throws IOException{
+        socket = new DatagramSocket();
+        InetAddress addr = InetAddress.getByName(User.getInstance().getIP());
+        String end="end";
+        outPacket = new DatagramPacket(end.getBytes(),end.length(),addr,EchoServer.Server_Port);
+        socket.send(outPacket);
     }
 
 }

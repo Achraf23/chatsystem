@@ -49,14 +49,15 @@ public class EchoServer extends Thread {
 
             }
 
+            String received
+                    = new String(packet.getData(), 0, packet.getLength());
+
             //make sure not to receive its own broadcast
 
             try {
                 InetAddress i = InetAddress.getByName(User.getInstance().getIP());
                 if (!packet.getAddress().equals(i)) {
-                    System.out.println("ici");
-                    String received
-                            = new String(packet.getData(), 0, packet.getLength());
+                    System.out.println("packet from different host");
 
                     if (received.equals("Hello")) {
                         System.out.println("broadcast received");
@@ -123,6 +124,10 @@ public class EchoServer extends Thread {
                 System.out.println("stop thread");
                 this.interrupt();
 
+            }
+
+            if (received.equals("end")) {
+                running = false;
             }
 
 
