@@ -5,25 +5,28 @@ import java.util.ArrayList;
 
 public class ClientUDP {
 
-    public void BroadcastConnection() throws IOException{
+    private DatagramSocket socket = null;
 
-        InetAddress addr=null;
-        try{
-            addr = InetAddress.getByName("255.255.255.255");
-            BroadcastingClient.broadcast("Hello", addr);
+    public void broadcastConnection(String broadcastMessage) throws IOException{
 
-        }catch (UnknownHostException e){
-            System.out.println("error can't find broadcast addresses name");
-            throw e;
-        }
+        InetAddress addr=InetAddress.getByName("255.255.255.255");
+        socket = new DatagramSocket();
+        socket.setBroadcast(true);
 
+        byte[] buffer = broadcastMessage.getBytes();
+
+        DatagramPacket packet
+                = new DatagramPacket(buffer, buffer.length,addr,EchoServer.Server_Port);
+        socket.send(packet);
+
+        socket.close();
     }
 
     public void sendMsgToOthers(String msg) {
         ArrayList<PseudoIP> table=ContactList.getInstance().table;
         DatagramPacket outPacket;
         try{
-            DatagramSocket socket= new DatagramSocket();
+            socket= new DatagramSocket();
 
             for(int i=0;i<table.size();i++){
                 try {
@@ -51,37 +54,6 @@ public class ClientUDP {
         }
 
 
-
     }
-
-
-    public static void main(String[] args) throws IOException {
-//        ClientUDP c =new ClientUDP();
-//        c.BroadcastConnection()
-        InetAddress addr_dest = InetAddress.getByName("10.1.1.65");
-
-    }
-
-
-    class BroadcastingClient {
-        private static DatagramSocket socket = null;
-
-
-        public static void broadcast(
-                String broadcastMessage, InetAddress address) throws IOException {
-            socket = new DatagramSocket();
-            socket.setBroadcast(true);
-
-            byte[] buffer = broadcastMessage.getBytes();
-
-            DatagramPacket packet
-                    = new DatagramPacket(buffer, buffer.length, address, EchoServer.Server_Port);
-            socket.send(packet);
-
-            socket.close();
-        }
-    }
-
-
 
 }

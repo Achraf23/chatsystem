@@ -25,7 +25,7 @@ public class ConnectionController {
 
 
         server.start(); ///launch server to listen to other users
-        c.BroadcastConnection();        //send broadcast to retrieve connected users nickname
+        c.broadcastConnection("Hello");        //send broadcast to retrieve connected users nickname
 
         //waiting a bit for the contactList to be initialized
         try {
