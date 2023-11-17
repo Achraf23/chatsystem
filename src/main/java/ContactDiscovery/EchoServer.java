@@ -34,6 +34,10 @@ public class EchoServer extends Thread {
         return false;
     }
 
+    boolean isMyMessage(InetAddress addrSrc) throws IOException{
+        return User.getInstance().getIpAdresses().contains(addrSrc);
+    }
+
     public void run() {
         running = true;
 
@@ -53,15 +57,15 @@ public class EchoServer extends Thread {
                     = new String(packet.getData(), 0, packet.getLength());
 
 
-
-            //make sure not to receive its own broadcast
             if (received.equals("end")) {
                 running = false;
 
             }else{
                 try {
-                    InetAddress i = InetAddress.getByName(User.getInstance().getIP());
-                    if (!packet.getAddress().equals(i)) {
+                    //make sure not to receive its own broadcast
+                    InetAddress addressSrc = packet.getAddress();
+
+                    if (!isMyMessage(addressSrc)) {
                         System.out.println("packet from different host");
 
                         if (received.equals("Hello")) {

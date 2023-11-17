@@ -57,11 +57,12 @@ public class ClientUDP {
     }
 
     public void endConnection() throws IOException{
-        socket = new DatagramSocket();
-        InetAddress addr = InetAddress.getByName(User.getInstance().getIP());
-        String end="end";
-        outPacket = new DatagramPacket(end.getBytes(),end.length(),addr,EchoServer.Server_Port);
-        socket.send(outPacket);
+//        socket = new DatagramSocket();
+//        InetAddress addr = InetAddress.getByName(User.getInstance().getIP());
+//        String end="end";
+//        outPacket = new DatagramPacket(end.getBytes(),end.length(),addr,EchoServer.Server_Port);
+//        socket.send(outPacket);
+
     }
 
 }

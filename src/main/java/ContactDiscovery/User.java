@@ -4,13 +4,14 @@ import Controller.ConnectionController;
 
 import java.io.IOException;
 import java.net.*;
+import java.util.ArrayList;
 import java.util.Enumeration;
 
 public class User {
 
     ContactList contactList;
     //Récuperer l'adresse IP par un getter
-    private String ip;
+    private ArrayList<InetAddress> ipAdresses;
     //Pseudo a même à changer
     public String nickname = null;
 
@@ -19,25 +20,13 @@ public class User {
 
 
     private User() throws IOException {
-//            this.ip=InetAddress.getLocalHost().getHostAddress();
-        if(enableInsa){
-            Enumeration e = NetworkInterface.getNetworkInterfaces();
-            if(e.hasMoreElements()){
-                NetworkInterface n = (NetworkInterface) e.nextElement();
-                Enumeration ee = n.getInetAddresses();
-                InetAddress j=null;
-                for(int i=0;i<2;i++){
-                    if(ee.hasMoreElements()){
-                        j= (InetAddress) ee.nextElement();
-                    }
-                }
-                if(j!=null){
-                    this.ip=j.getHostAddress();
-                }else throw new IOException("ip not initialized");
+        ipAdresses = new ArrayList<InetAddress>();
+        retrieveIpAdresses();
+    }
 
-            }
-        }else this.ip=InetAddress.getLocalHost().getHostAddress();
+    public static void main(String[] args) throws Exception {
 
+        System.out.println("test");
     }
 
 
@@ -49,7 +38,31 @@ public class User {
         return user;
     }
 
-    public String getIP(){return this.ip;}
+    private void retrieveIpAdresses() throws SocketException{
+        Enumeration e = NetworkInterface.getNetworkInterfaces();
+        while(e.hasMoreElements())
+        {
+            NetworkInterface n = (NetworkInterface) e.nextElement();
+            Enumeration ee = n.getInetAddresses();
+            while (ee.hasMoreElements())
+            {
+                InetAddress i = (InetAddress) ee.nextElement();
+                if(!i.getHostAddress().contains(":"))
+                    ipAdresses.add(i);
+            }
+        }
+
+        for(InetAddress addr:ipAdresses){
+            System.out.println(addr.getHostAddress());
+        }
+    }
+
+    public ArrayList<InetAddress> getIpAdresses(){return ipAdresses;}
+
+
+
+
+
 
 
 
