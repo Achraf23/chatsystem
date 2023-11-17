@@ -27,7 +27,7 @@ public class TestContactList {
     }
 
     @Test
-    void isContactListRight(){
+    void isContactListValid(){
         for(int i=0;i<contactList.size();i++){
             assertEquals(1,uniqueElement(contactList.get(i).pseudo));
         }

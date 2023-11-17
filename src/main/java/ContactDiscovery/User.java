@@ -10,12 +10,12 @@ public class User {
 
     ContactList contactList;
     //Récuperer l'adresse IP par un getter
-    private final String ip;
+    private String ip;
     //Pseudo a même à changer
     public String nickname = null;
 
     private static User user = null;
-    private static final boolean enableInsa = false;
+    private static final boolean enableInsa = true;
 
 
     private User() throws IOException {
@@ -31,8 +31,9 @@ public class User {
                         j= (InetAddress) ee.nextElement();
                     }
                 }
-
-                this.ip=j.getHostAddress();
+                if(j!=null){
+                    this.ip=j.getHostAddress();
+                }else throw new IOException("ip not initialized");
 
             }
         }else this.ip=InetAddress.getLocalHost().getHostAddress();
