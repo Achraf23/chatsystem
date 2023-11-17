@@ -8,24 +8,37 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
+/** Handles the Users operations regarding the server
+ *
+ */
 public class ConnectionController {
 
     User u;
     ClientUDP c;
     EchoServer server;
 
-
+    /** ConnectionController Constructor
+     *
+     * @throws IOException
+     */
     ConnectionController() throws IOException{
         u = User.getInstance(); // if exception, will be thrown in User
-        c =new ClientUDP();
+        c = new ClientUDP();
         server = new EchoServer();
 
     }
+
+    /** Tries to connect to the server with a given nickname, initializes the contactList table and verifies that our pseudo is unique.
+     * Upon connection, sends our nickname to other users
+     *
+     * @param nickname The pseudo we chose
+     * @throws IOException
+     */
     public void tryConnection(String nickname) throws IOException {
 
 
         server.start(); ///launch server to listen to other users
-        c.broadcastConnection("Hello");        //send broadcast to retrieve connected users nickname
+        c.broadcastConnection("Hello"); //send broadcast to retrieve connected users nickname
 
         //waiting a bit for the contactList to be initialized
         try {
@@ -51,11 +64,18 @@ public class ConnectionController {
 
     }
 
+    /** Disconnecting from the server, we also notify the other users
+     *
+     * @throws Exception if sleep failed
+     */
     public void logOut() throws Exception{
+        //TODO: Do we interrupt the disconnect if sleep failed?
         c.sendMsgToOthers("disconnect");
         Thread.sleep(100);
         c.endConnection();
     }
+
+    //TODO: Main segment
     public static void main(String[] args) throws Exception {
         ConnectionController c = new ConnectionController();
         c.tryConnection("a");
@@ -63,6 +83,11 @@ public class ConnectionController {
 
     }
 
+    /** Verifies that our pseudo is unique by consulting the contactList table
+     *
+     * @param pseudo Our pseudo
+     * @return false if already used, true if unique
+     */
     boolean isUnique(String pseudo){
         ContactList contactList = ContactList.getInstance();
         for(int i=0;i<contactList.table.size();i++){

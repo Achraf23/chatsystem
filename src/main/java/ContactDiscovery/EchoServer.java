@@ -4,7 +4,9 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
-
+/** Thread that listens to the message received by the client from others clients
+ *
+ */
 public class EchoServer extends Thread {
 
     private DatagramSocket socket;
@@ -12,17 +14,23 @@ public class EchoServer extends Thread {
     private byte[] buf = new byte[256];
     static  final int Server_Port=8080;
 
-    public static void main(String[] args) throws Exception {
+    //TODO:
+    /*public static void main(String[] args) throws Exception {
         EchoServer server = new EchoServer();
 
 
-    }
+    }*/
 
+    /** EchoServer Constructor
+     */
     public EchoServer() throws SocketException{
-
         socket = new DatagramSocket(Server_Port);
     }
 
+    /** Remove the given IP address from the Contact list
+     * @param ip Wanted IP address as a String
+     * @return true if correctly removed, false otherwise
+     */
     boolean findAndRemove(String ip){
         ArrayList<PseudoIP> table = ContactList.getInstance().table;
         for(int i=0;i<table.size();i++){
@@ -34,29 +42,30 @@ public class EchoServer extends Thread {
         return false;
     }
 
+    /** Check if the datagram received has been sent by me
+     *
+     * @param addrSrc
+     * @return true if so, false otherwise
+     * @throws IOException
+     */
     boolean isMyMessage(InetAddress addrSrc) throws IOException{
         return User.getInstance().getIpAdresses().contains(addrSrc);
     }
 
     public void run() {
         running = true;
+        //TODO: "Updating conctactList": Send credentials back
 
         while (running) {
             DatagramPacket packet
                     = new DatagramPacket(buf, buf.length);
-
             try {
                 socket.receive(packet);
                 System.out.println("after receiving");
             } catch (IOException e) {
                 System.out.println("receive method error");
-
             }
-
-            String received
-                    = new String(packet.getData(), 0, packet.getLength());
-
-
+            String received = new String(packet.getData(), 0, packet.getLength());
             if (received.equals("end")) {
                 running = false;
 
@@ -88,14 +97,11 @@ public class EchoServer extends Thread {
                             } catch (IOException e) {
                                 System.out.println("exception ip address echo server");
                             }
-
-
                         } else {
                             String string = packet.getAddress().toString();
                             System.out.println("ip="+string);
                             String[] parts = string.split("/");
                             String part2 = parts[1];
-
 
                             switch (received) {
                                 case "disconnect":
@@ -111,9 +117,7 @@ public class EchoServer extends Thread {
                                     if (!findAndRemove(part2)){
                                         System.out.println("ip not found in ContactList");
                                     }else System.out.println("oui");
-
                                     break;
-
                                 default:
                                     //Not a broadcast ==> Save new pseudo user
                                     String elt = received + "/" + packet.getAddress().toString();
@@ -121,27 +125,14 @@ public class EchoServer extends Thread {
 
                                     ContactList.getInstance().addLine(received, part2);
                             }
-
-
                         }
-
-
                     } else System.out.println("received same address");
-
-
                 } catch (IOException i) {
                     System.out.println("stop thread");
                     this.interrupt();
-
                 }
-
-
-
-
             }
         }
-
-
         socket.close();
     }
 }
