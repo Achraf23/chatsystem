@@ -59,17 +59,34 @@ public class EchoServer extends Thread {
         while (running) {
             DatagramPacket packet
                     = new DatagramPacket(buf, buf.length);
-            try {
-                socket.receive(packet);
-                System.out.println("after receiving");
-            } catch (IOException e) {
-                System.out.println("receive method error");
-            }
-            String received = new String(packet.getData(), 0, packet.getLength());
-            if (received.equals("end")) {
-                running = false;
 
-            }else{
+            boolean receive=false;
+            try {
+                socket.setSoTimeout(100);
+
+            }catch (SocketException s){
+                System.out.println("setSoTimeout error");
+                this.interrupt();
+            }
+
+            //je receive si jai rien recu et si mon thread na pas ete interrompu
+            while (!receive && !this.isInterrupted()){
+                try{
+                    try {
+                        socket.receive(packet);
+                        receive=true;
+                    }catch (SocketTimeoutException s){
+                        System.out.println("timeout");
+                    }
+                }catch (IOException e){
+                    System.out.println("receive ");
+                }
+            }
+
+
+            String received = new String(packet.getData(), 0, packet.getLength());
+
+            if(!this.isInterrupted()){
                 try {
                     //make sure not to receive its own broadcast
                     InetAddress addressSrc = packet.getAddress();
@@ -131,7 +148,7 @@ public class EchoServer extends Thread {
                     System.out.println("stop thread");
                     this.interrupt();
                 }
-            }
+            }else running = false;
         }
         socket.close();
     }

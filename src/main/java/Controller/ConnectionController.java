@@ -13,7 +13,6 @@ import java.net.UnknownHostException;
  */
 public class ConnectionController {
 
-    User u;
     ClientUDP c;
     EchoServer server;
 
@@ -22,7 +21,6 @@ public class ConnectionController {
      * @throws IOException
      */
     ConnectionController() throws IOException{
-        u = User.getInstance(); // if exception, will be thrown in User
         c = new ClientUDP();
         server = new EchoServer();
 
@@ -50,7 +48,7 @@ public class ConnectionController {
         System.out.println(ContactList.getInstance().table.size());
 
         if(isUnique(nickname)){
-            u.nickname = nickname;
+            User.getInstance().nickname = nickname;
         }else{
             throw new IOException("Connection Failed");
         }
@@ -58,7 +56,7 @@ public class ConnectionController {
         System.out.println("nickname="+User.getInstance().nickname);
         // send my pseudo only if there are other users connected
         if(!ContactList.getInstance().table.isEmpty())
-            c.sendMsgToOthers(u.nickname);
+            c.sendMsgToOthers(User.getInstance().nickname);
         else System.out.println("I'm the only one");
 
 
@@ -72,7 +70,7 @@ public class ConnectionController {
         //TODO: Do we interrupt the disconnect if sleep failed?
         c.sendMsgToOthers("disconnect");
         Thread.sleep(100);
-        c.endConnection();
+        server.interrupt();
     }
 
     //TODO: Main segment

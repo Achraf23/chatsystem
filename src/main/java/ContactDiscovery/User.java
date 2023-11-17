@@ -70,9 +70,7 @@ public class User {
                     ipAdresses.add(i);
             }
         }
-        for(InetAddress addr:ipAdresses){
-            System.out.println(addr.getHostAddress());
-        }
+
     }
 
     /** Get the different Ip addresses of our user
