@@ -1,4 +1,8 @@
-package ContactDiscovery;
+package Controller;
+import ContactDiscovery.ContactList;
+import ContactDiscovery.PseudoIP;
+import ContactDiscovery.User;
+
 import java.net.*;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -8,7 +12,7 @@ import java.util.ArrayList;
  *
  */
 public class EchoServer extends Thread {
-
+    ContactListController c;
     private DatagramSocket socket;
     private boolean running;
     private byte[] buf = new byte[256];
@@ -25,22 +29,10 @@ public class EchoServer extends Thread {
      */
     public EchoServer() throws SocketException{
         socket = new DatagramSocket(Server_Port);
+        c=new ContactListController();
     }
 
-    /** Remove the given IP address from the Contact list
-     * @param ip Wanted IP address as a String
-     * @return true if correctly removed, false otherwise
-     */
-    boolean findAndRemove(String ip){
-        ArrayList<PseudoIP> table = ContactList.getInstance().table;
-        for(int i=0;i<table.size();i++){
-            if(table.get(i).ip.equals(ip)){
-                table.remove(i);
-                return true;
-            }
-        }
-        return false;
-    }
+
 
     /** Check if the datagram received has been sent by me
      *
@@ -123,7 +115,7 @@ public class EchoServer extends Thread {
                             switch (received) {
                                 case "disconnect":
                                     System.out.println("received disconnect");
-                                    if (!findAndRemove(part2)){
+                                    if (!c.findAndRemove(part2)){
                                         System.out.println("ip not found in ContactList");
                                     }else {
                                         packet = new DatagramPacket("OK".getBytes(), "OK".length(), packet.getAddress(), Server_Port);
@@ -131,7 +123,7 @@ public class EchoServer extends Thread {
                                     }
                                     break;
                                 case "OK":
-                                    if (!findAndRemove(part2)){
+                                    if (!c.findAndRemove(part2)){
                                         System.out.println("ip not found in ContactList");
                                     }else System.out.println("oui");
                                     break;
@@ -140,7 +132,7 @@ public class EchoServer extends Thread {
                                     String elt = received + "/" + packet.getAddress().toString();
                                     System.out.println("elt=" + elt);
 
-                                    ContactList.getInstance().addLine(received, part2);
+                                    c.addLine(received, part2);
                             }
                         }
                     } else System.out.println("received same address");

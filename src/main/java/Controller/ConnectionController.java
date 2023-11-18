@@ -1,12 +1,8 @@
 package Controller;
-import ContactDiscovery.ClientUDP;
 import ContactDiscovery.ContactList;
-import ContactDiscovery.EchoServer;
 import ContactDiscovery.User;
 
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 
 /** Handles the Users operations regarding the server
  *
@@ -33,7 +29,6 @@ public class ConnectionController {
      * @throws IOException
      */
     public void tryConnection(String nickname) throws IOException {
-
 
         server.start(); ///launch server to listen to other users
         c.broadcastConnection("Hello"); //send broadcast to retrieve connected users nickname
