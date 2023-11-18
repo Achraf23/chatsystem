@@ -14,7 +14,7 @@ public class ContactList {
     /** ContactList Constructor
      *
      */
-    ContactList(){
+    public ContactList(){
         this.table = new ArrayList<PseudoIP>();
     }
 
@@ -35,7 +35,9 @@ public class ContactList {
      * @param pseudo The associated pseudo of the user
      * @param ip The associated IP address of the user
      */
-
+    public void addLine(String pseudo,String ip){
+        table.add(new PseudoIP(pseudo,ip));
+    }
 
 
 
