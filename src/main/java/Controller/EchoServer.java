@@ -1,4 +1,8 @@
-package ContactDiscovery;
+package Controller;
+import ContactDiscovery.ContactList;
+import ContactDiscovery.PseudoIP;
+import ContactDiscovery.User;
+
 import java.net.*;
 import java.io.*;
 import java.nio.charset.StandardCharsets;

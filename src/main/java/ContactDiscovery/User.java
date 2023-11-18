@@ -19,7 +19,6 @@ public class User {
     //TODO: Will it be pseudo or nickname ?
     public String nickname = null;
     private static User user = null;
-    private static final boolean enableInsa = true;
 
 
     /** User Constructor
