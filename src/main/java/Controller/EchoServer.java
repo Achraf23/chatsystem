@@ -56,37 +56,56 @@ public class EchoServer extends Thread {
         return User.getInstance().getIpAdresses().contains(addrSrc);
     }
 
+    private void receiveMsg(DatagramPacket packet) throws IOException{
+        boolean receive=false;
+
+        try {
+            socket.setSoTimeout(100);
+
+        }catch (SocketException s){
+            throw new IOException("setSoTimeout error");
+        }
+
+        //je receive si jai rien recu et si mon thread na pas ete interrompu
+        while (!receive && !this.isInterrupted()){
+            try{
+                try {
+                    socket.receive(packet);
+                    receive=true;
+                }catch (SocketTimeoutException s){
+                    // Timeout normal
+                }
+            }catch (IOException e){
+                throw new IOException("Socket.receive Error");
+            }
+        }
+
+    }
+
+    private void sendMsg(String msg,InetAddress addrDest) throws IOException{
+
+        DatagramPacket packet = new DatagramPacket(msg.getBytes(), msg.length(), addrDest, Server_Port);
+
+        try {
+            System.out.println("sending pseudo: "+new String(packet.getData(), StandardCharsets.UTF_8));
+            socket.send(packet);
+        } catch (IOException e) {
+            throw new IOException("socket.send exception");
+        }
+    }
+
     public void run() {
-        running = true;
         //TODO: "Updating conctactList": Send credentials back
 
-        while (running) {
+        while (!this.isInterrupted()) {
             DatagramPacket packet
                     = new DatagramPacket(buf, buf.length);
 
-            boolean receive=false;
             try {
-                socket.setSoTimeout(100);
-
-            }catch (SocketException s){
-                System.out.println("setSoTimeout error");
+                receiveMsg(packet);
+            }catch (IOException e){
                 this.interrupt();
             }
-
-            //je receive si jai rien recu et si mon thread na pas ete interrompu
-            while (!receive && !this.isInterrupted()){
-                try{
-                    try {
-                        socket.receive(packet);
-                        receive=true;
-                    }catch (SocketTimeoutException s){
-                        System.out.println("timeout");
-                    }
-                }catch (IOException e){
-                    System.out.println("receive ");
-                }
-            }
-
 
             String received = new String(packet.getData(), 0, packet.getLength());
 
@@ -102,57 +121,43 @@ public class EchoServer extends Thread {
                             System.out.println("broadcast received");
 
                             //sends pseudo after receiving broadcast
-                            InetAddress address = packet.getAddress();
-                            int port = packet.getPort();
-                            String pseudo;
-                            try {
-                                pseudo = User.getInstance().nickname;
-                                packet = new DatagramPacket(pseudo.getBytes(), pseudo.length(), address, Server_Port);
+                            String pseudo = User.getInstance().nickname;
+                            sendMsg(pseudo,packet.getAddress());
 
-                                try {
-                                    System.out.println("sending pseudo: "+new String(packet.getData(), StandardCharsets.UTF_8));
-                                    socket.send(packet);
-                                } catch (IOException e) {
-                                    System.out.println("send method error");
-                                }
-                            } catch (IOException e) {
-                                System.out.println("exception ip address echo server");
-                            }
                         } else {
-                            String string = packet.getAddress().toString();
-                            System.out.println("ip="+string);
-                            String[] parts = string.split("/");
-                            String part2 = parts[1];
 
                             switch (received) {
                                 case "disconnect":
+                                    //Disconnection request
                                     System.out.println("received disconnect");
-                                    if (!findAndRemove(part2)){
+                                    if (!findAndRemove(packet.getAddress().getHostAddress())){
                                         System.out.println("ip not found in ContactList");
                                     }else {
-                                        packet = new DatagramPacket("OK".getBytes(), "OK".length(), packet.getAddress(), Server_Port);
-                                        socket.send(packet);
+                                        sendMsg("OK",packet.getAddress());
                                     }
                                     break;
                                 case "OK":
-                                    if (!findAndRemove(part2)){
+                                    //Confirm disconnection request
+                                    if (!findAndRemove(packet.getAddress().getHostAddress())){
                                         System.out.println("ip not found in ContactList");
                                     }else System.out.println("oui");
                                     break;
+
                                 default:
-                                    //Not a broadcast ==> Save new pseudo user
+                                    //Save new pseudo user
                                     String elt = received + "/" + packet.getAddress().toString();
                                     System.out.println("elt=" + elt);
+                                    findAndRemove(packet.getAddress().getHostAddress());
 
-                                    ContactList.getInstance().addLine(received, part2);
+                                    ContactList.getInstance().addLine(received, packet.getAddress().getHostAddress());
                             }
                         }
-                    } else System.out.println("received same address");
+                    } else {System.out.println("received same address "+packet.getAddress().getHostAddress());}
                 } catch (IOException i) {
                     System.out.println("stop thread");
                     this.interrupt();
                 }
-            }else running = false;
+            }
         }
         socket.close();
     }

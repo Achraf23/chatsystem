@@ -9,7 +9,7 @@ import java.io.IOException;
  */
 public class ConnectionController {
 
-    ClientUDP c;
+    ClientUDP client;
     EchoServer server;
 
     /** ConnectionController Constructor
@@ -17,7 +17,7 @@ public class ConnectionController {
      * @throws IOException
      */
     ConnectionController() throws IOException{
-        c = new ClientUDP();
+        client = new ClientUDP();
         server = new EchoServer();
 
     }
@@ -32,7 +32,7 @@ public class ConnectionController {
 
 
         server.start(); ///launch server to listen to other users
-        c.broadcastConnection("Hello"); //send broadcast to retrieve connected users nickname
+        client.broadcastConnection("Hello"); //send broadcast to retrieve connected users nickname
 
         //waiting a bit for the contactList to be initialized
         try {
@@ -52,7 +52,7 @@ public class ConnectionController {
         System.out.println("nickname="+User.getInstance().nickname);
         // send my pseudo only if there are other users connected
         if(!ContactList.getInstance().table.isEmpty())
-            c.sendMsgToOthers(User.getInstance().nickname);
+            client.sendMsgToOthers(User.getInstance().nickname);
         else System.out.println("I'm the only one");
 
 
@@ -64,9 +64,15 @@ public class ConnectionController {
      */
     public void logOut() throws Exception{
         //TODO: Do we interrupt the disconnect if sleep failed?
-        c.sendMsgToOthers("disconnect");
+        client.sendMsgToOthers("disconnect");
         Thread.sleep(100);
         server.interrupt();
+    }
+
+    public void changePseudo(String pseudo){
+        if(isUnique(pseudo)){
+            client.sendMsgToOthers(pseudo);
+        }
     }
 
     //TODO: Main segment
