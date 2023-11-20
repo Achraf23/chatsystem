@@ -65,13 +65,15 @@ public class ClientUDP {
         }
     }
 
-    public void endConnection() throws IOException{
-//        socket = new DatagramSocket();
-//        InetAddress addr = InetAddress.getByName(User.getInstance().getIP());
-//        String end="end";
-//        outPacket = new DatagramPacket(end.getBytes(),end.length(),addr,EchoServer.Server_Port);
-//        socket.send(outPacket);
+    public void sendMsg(String msg,InetAddress ip_dest,int port_dest) throws IOException{
+        outPacket = new DatagramPacket(msg.getBytes(), msg.getBytes().length,
+                ip_dest, port_dest);
+
+        socket = new DatagramSocket();
+        socket.send(outPacket);
 
     }
+
+
 
 }

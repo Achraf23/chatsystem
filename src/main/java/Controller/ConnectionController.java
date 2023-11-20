@@ -46,6 +46,7 @@ public class ConnectionController {
         if(isUnique(nickname)){
             User.getInstance().nickname = nickname;
         }else{
+            server.interrupt();
             throw new IOException("Connection Failed");
         }
 
@@ -69,17 +70,22 @@ public class ConnectionController {
         server.interrupt();
     }
 
-    public void changePseudo(String pseudo){
+    public void changePseudo(String pseudo) throws IOException{
         if(isUnique(pseudo)){
+            User.getInstance().nickname = pseudo;
+            System.out.println("nickname= "+pseudo);
             client.sendMsgToOthers(pseudo);
-        }
+        }else throw new IOException("Pseudo already taken");
     }
 
     //TODO: Main segment
     public static void main(String[] args) throws Exception {
+        System.out.println("changement");
         ConnectionController c = new ConnectionController();
         c.tryConnection("a");
-        c.logOut();
+        if(!ContactList.getInstance().table.isEmpty())
+            System.out.println(ContactList.getInstance().table.get(0).pseudo);
+        c.changePseudo("c");
 
     }
 

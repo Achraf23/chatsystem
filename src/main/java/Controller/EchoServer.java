@@ -147,7 +147,9 @@ public class EchoServer extends Thread {
                                     //Save new pseudo user
                                     String elt = received + "/" + packet.getAddress().toString();
                                     System.out.println("elt=" + elt);
-                                    findAndRemove(packet.getAddress().getHostAddress());
+                                    if(findAndRemove(packet.getAddress().getHostAddress())){
+                                        System.out.println("pseudo has changed: "+elt);
+                                    }
 
                                     ContactList.getInstance().addLine(received, packet.getAddress().getHostAddress());
                             }
