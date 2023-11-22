@@ -1,26 +1,16 @@
-# ~~Burn~~ Replace with your own after reading
+# Description of the project
+This private repository is a first version of the Chat System project. This first version is a software library that handles the discovery of contacts
+in the local network. 
+Three functionalities are offered to the user in the Discovery System Class :
+1. Log in the local network with a pseudonym
+2. Log out from the local network with a pseudonym
+3. Change pseudonym while the user is connected to the network
 
-This private repository is created for you so that your teachers have access to it.
+Upon connection, the user has real-time information on who is connected to the network.
 
-## Identify yourself
+# Instructions to compile Contact Discovery
+mvn compile
+mvn package
 
-Before anything, **complete the `metadata.yml` with your own information.** 
-
-This is the file that we will use to identify the teacher responsible for the repository and assign the grades to the participating students.
-
-## Take ownership
-
-As long as you make sure to keep the `metadata.yml` file at the root of this repository, you are free to do anything. Our suggestion would be to have it organized into something like the following:
-
-    .gitignore
-    metadata.yml
-    pom.xml
-    README.md
-    src/
-      main/
-      test/
-    doc/
-      uml/
-      report.pdf
-
-In particular, you will soon have to replace this README with something that describes your own project.
+# How to execute ContactDiscovery
+java -cp target/chatsystem-bensebaa-bakri-1.0-SNAPSHOT.jar Controller.DiscoverySystem
