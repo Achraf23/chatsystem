@@ -8,9 +8,9 @@ Three functionalities are offered to the user in the Discovery System Class :
 
 Upon connection, the user has real-time information on who is connected to the network.
 
-# Instructions to compile Contact Discovery
-mvn compile
-mvn package
+## Instructions to compile Contact Discovery
+    mvn compile
+    mvn package
 
-# How to execute ContactDiscovery
-java -cp target/chatsystem-bensebaa-bakri-1.0-SNAPSHOT.jar Controller.DiscoverySystem
+## How to execute ContactDiscovery
+    java -cp target/chatsystem-bensebaa-bakri-1.0-SNAPSHOT.jar Controller.DiscoverySystem
