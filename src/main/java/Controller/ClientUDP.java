@@ -10,7 +10,7 @@ import java.util.ArrayList;
 /**
  *
  */
-public class ClientUDP {
+class ClientUDP {
 
     private DatagramSocket socket = null;
     DatagramPacket outPacket = null;

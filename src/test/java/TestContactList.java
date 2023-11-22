@@ -26,5 +26,12 @@ public class TestContactList {
         }
     }
 
+    @Test
+    void testAddContactList(){
+        int sizeList=ContactList.getInstance().table.size();
+        ContactList.getInstance().addLine("pseudo","test");
+        assertEquals(sizeList+1,ContactList.getInstance().table.size());
+    }
+
 
 }

@@ -11,12 +11,12 @@ import java.util.ArrayList;
 /** Thread that listens to the message received by the client from others clients
  *
  */
-public class EchoServer extends Thread {
+class EchoServer extends Thread {
 
     private DatagramSocket socket;
     private boolean running;
     private byte[] buf = new byte[256];
-    static  final int Server_Port=8080;
+    static final int Server_Port=8080;
 
     //TODO:
     /*public static void main(String[] args) throws Exception {
@@ -56,7 +56,7 @@ public class EchoServer extends Thread {
         return User.getInstance().getIpAdresses().contains(addrSrc);
     }
 
-    private void receiveMsg(DatagramPacket packet) throws IOException{
+    void receiveMsg(DatagramPacket packet) throws IOException{
         boolean receive=false;
 
         try {
@@ -82,7 +82,7 @@ public class EchoServer extends Thread {
 
     }
 
-    private void sendMsg(String msg,InetAddress addrDest) throws IOException{
+    void sendMsg(String msg,InetAddress addrDest) throws IOException{
 
         DatagramPacket packet = new DatagramPacket(msg.getBytes(), msg.length(), addrDest, Server_Port);
 
