@@ -43,7 +43,7 @@ public class ConnectionController {
 
         System.out.println(ContactList.getInstance().table.size());
 
-        if(isUnique(nickname)){
+        if(ContactList.getInstance().isUnique(nickname)){
             User.getInstance().nickname = nickname;
         }else{
             server.interrupt();
@@ -71,7 +71,7 @@ public class ConnectionController {
     }
 
     public void changePseudo(String pseudo) throws IOException{
-        if(isUnique(pseudo)){
+        if(ContactList.getInstance().isUnique(pseudo)){
             User.getInstance().nickname = pseudo;
             System.out.println("nickname= "+pseudo);
             client.sendMsgToOthers(pseudo);
@@ -89,19 +89,6 @@ public class ConnectionController {
 
     }
 
-    /** Verifies that our pseudo is unique by consulting the contactList table
-     *
-     * @param pseudo Our pseudo
-     * @return false if already used, true if unique
-     */
-    boolean isUnique(String pseudo){
-        ContactList contactList = ContactList.getInstance();
-        for(int i=0;i<contactList.table.size();i++){
-            if(pseudo.equals(contactList.table.get(i).pseudo)){
-                return false;
-            }
-        }
-        return true;
-    }
+
 
 }

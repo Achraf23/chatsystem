@@ -39,6 +39,20 @@ public class ContactList {
         table.add(new PseudoIP(pseudo,ip));
     }
 
+    /** Verifies that our pseudo is unique by consulting the contactList table
+     *
+     * @param pseudo Our pseudo
+     * @return false if already used, true if unique
+     */
+    public boolean isUnique(String pseudo){
+        ContactList contactList = ContactList.getInstance();
+        for(int i=0;i<contactList.table.size();i++){
+            if(pseudo.equals(contactList.table.get(i).pseudo)){
+                return false;
+            }
+        }
+        return true;
+    }
 
 
 }

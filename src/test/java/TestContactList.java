@@ -20,7 +20,7 @@ public class TestContactList {
     }
 
     @Test
-    void isContactListValid(){
+    void testContactListValid(){
         for(int i=0;i<ContactList.getInstance().table.size();i++){
             assertEquals(1,uniqueElement(ContactList.getInstance().table.get(i).pseudo));
         }
