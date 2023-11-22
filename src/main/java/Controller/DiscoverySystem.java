@@ -91,8 +91,6 @@ public class DiscoverySystem {
         do{
             System.out.println("1.Change Pseudo");
             System.out.println("2.Log Out and Quit");
-            System.out.println("3.Quit");
-
 
             do{
                 input=myObj.nextLine();
@@ -117,7 +115,6 @@ public class DiscoverySystem {
                         break;
                 }
             }while (input.equals("3"));
-
 
 
         }while (!input.equals("2"));

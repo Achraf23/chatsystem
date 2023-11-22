@@ -87,7 +87,7 @@ class EchoServer extends Thread {
         DatagramPacket packet = new DatagramPacket(msg.getBytes(), msg.length(), addrDest, Server_Port);
 
         try {
-            System.out.println("sending pseudo: "+new String(packet.getData(), StandardCharsets.UTF_8));
+//            System.out.println("sending pseudo: "+new String(packet.getData(), StandardCharsets.UTF_8));
             socket.send(packet);
         } catch (IOException e) {
             throw new IOException("socket.send exception");
@@ -126,32 +126,19 @@ class EchoServer extends Thread {
 
                         } else {
 
-                            switch (received) {
-                                case "disconnect":
-                                    //Disconnection request
-                                    System.out.println("received disconnect");
-                                    if (!findAndRemove(packet.getAddress().getHostAddress())){
-//                                        System.out.println("ip not found in ContactList");
-                                    }else {
-                                        sendMsg("OK",packet.getAddress());
-                                    }
-                                    break;
-                                case "OK":
-                                    //Confirm disconnection request
-                                    if (!findAndRemove(packet.getAddress().getHostAddress())){
-//                                        System.out.println("ip not found in ContactList");
-                                    }else System.out.println("oui");
-                                    break;
-
-                                default:
-                                    //Save new pseudo user
-                                    String elt = received + "/" + packet.getAddress().toString();
-//                                    System.out.println("elt=" + elt);
-                                    if(findAndRemove(packet.getAddress().getHostAddress())){
-//                                        System.out.println("pseudo has changed: "+elt);
-                                    }
-
-                                    ContactList.getInstance().addLine(received, packet.getAddress().getHostAddress());
+                            if (received.equals("disconnect")) {
+                                //Disconnection request
+                                System.out.println("received disconnect");
+                                if (!findAndRemove(packet.getAddress().getHostAddress())) {
+                                    System.out.println("ip not found in ContactList\n");
+                                }
+                            }else{
+                                //Save new pseudo user
+                                String elt = received + "/" + packet.getAddress().toString();
+                                if(findAndRemove(packet.getAddress().getHostAddress())){
+                                        System.out.println("pseudo has changed: "+elt);
+                                }
+                                ContactList.getInstance().addLine(received, packet.getAddress().getHostAddress());
                             }
                         }
                     } //else {System.out.println("received same address "+packet.getAddress().getHostAddress());}
