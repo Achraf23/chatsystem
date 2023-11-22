@@ -115,10 +115,10 @@ class EchoServer extends Thread {
                     InetAddress addressSrc = packet.getAddress();
 
                     if (!isMyMessage(addressSrc)) {
-                        System.out.println("packet from different host");
+//                        System.out.println("packet from different host");
 
                         if (received.equals("Hello")) {
-                            System.out.println("broadcast received");
+//                            System.out.println("broadcast received");
 
                             //sends pseudo after receiving broadcast
                             String pseudo = User.getInstance().nickname;
@@ -131,7 +131,7 @@ class EchoServer extends Thread {
                                     //Disconnection request
                                     System.out.println("received disconnect");
                                     if (!findAndRemove(packet.getAddress().getHostAddress())){
-                                        System.out.println("ip not found in ContactList");
+//                                        System.out.println("ip not found in ContactList");
                                     }else {
                                         sendMsg("OK",packet.getAddress());
                                     }
@@ -139,22 +139,22 @@ class EchoServer extends Thread {
                                 case "OK":
                                     //Confirm disconnection request
                                     if (!findAndRemove(packet.getAddress().getHostAddress())){
-                                        System.out.println("ip not found in ContactList");
+//                                        System.out.println("ip not found in ContactList");
                                     }else System.out.println("oui");
                                     break;
 
                                 default:
                                     //Save new pseudo user
                                     String elt = received + "/" + packet.getAddress().toString();
-                                    System.out.println("elt=" + elt);
+//                                    System.out.println("elt=" + elt);
                                     if(findAndRemove(packet.getAddress().getHostAddress())){
-                                        System.out.println("pseudo has changed: "+elt);
+//                                        System.out.println("pseudo has changed: "+elt);
                                     }
 
                                     ContactList.getInstance().addLine(received, packet.getAddress().getHostAddress());
                             }
                         }
-                    } else {System.out.println("received same address "+packet.getAddress().getHostAddress());}
+                    } //else {System.out.println("received same address "+packet.getAddress().getHostAddress());}
                 } catch (IOException i) {
                     System.out.println("stop thread");
                     this.interrupt();

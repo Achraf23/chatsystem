@@ -3,6 +3,7 @@ import ContactDiscovery.ContactList;
 import ContactDiscovery.User;
 
 import java.io.IOException;
+import java.util.Scanner;  // Import the Scanner class
 
 /** Handles the Users operations regarding the server
  *
@@ -41,7 +42,6 @@ public class DiscoverySystem {
             System.out.println("sleep failed");
         }
 
-        System.out.println(ContactList.getInstance().table.size());
 
         if(ContactList.getInstance().isUnique(nickname)){
             User.getInstance().nickname = nickname;
@@ -50,11 +50,11 @@ public class DiscoverySystem {
             throw new IOException("Connection Failed");
         }
 
-        System.out.println("nickname="+User.getInstance().nickname);
+        System.out.println("nickname="+User.getInstance().nickname+"\n");
         // send my pseudo only if there are other users connected
         if(!ContactList.getInstance().table.isEmpty())
             client.sendMsgToOthers(User.getInstance().nickname);
-        else System.out.println("I'm the only one");
+        else System.out.println("I'm the only one\n");
 
 
     }
@@ -73,19 +73,60 @@ public class DiscoverySystem {
     public void changePseudo(String pseudo) throws IOException{
         if(ContactList.getInstance().isUnique(pseudo)){
             User.getInstance().nickname = pseudo;
-            System.out.println("nickname= "+pseudo);
+            System.out.println("nickname= "+pseudo+"\n");
             client.sendMsgToOthers(pseudo);
         }else throw new IOException("Pseudo already taken");
     }
 
     //TODO: Main segment
     public static void main(String[] args) throws Exception {
-        System.out.println("changement");
+
+        Scanner myObj = new Scanner(System.in);  // Create a Scanner object
+        System.out.println("Enter username");
+        String input = myObj.nextLine();
+
         DiscoverySystem c = new DiscoverySystem();
-        c.tryConnection("a");
-        if(!ContactList.getInstance().table.isEmpty())
-            System.out.println(ContactList.getInstance().table.get(0).pseudo);
-        c.changePseudo("c");
+        c.tryConnection(input);
+
+        do{
+            System.out.println("1.Change Pseudo");
+            System.out.println("2.Log Out and Quit");
+            System.out.println("3.Quit");
+
+
+            do{
+                input=myObj.nextLine();
+                switch (input){
+                    case "1":
+                        System.out.println("Enter username");
+                        input = myObj.nextLine();
+                        try {
+                            c.changePseudo(input);
+                        }catch (IOException e){
+                            System.out.println("User alreay taken");
+                            c.logOut();
+                        }
+                        break;
+
+                    case "2":
+                        c.logOut();
+                        break;
+
+                    default:
+                        System.out.println("Pas compris");
+                        break;
+                }
+            }while (input.equals("3"));
+
+
+
+        }while (!input.equals("2"));
+
+
+
+
+
+
 
     }
 

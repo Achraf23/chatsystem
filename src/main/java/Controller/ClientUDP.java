@@ -45,7 +45,7 @@ class ClientUDP {
 
             for(int i=0;i<table.size();i++){
                 try {
-                    System.out.println(table.get(i).ip);
+//                    System.out.println(table.get(i).ip);
                     InetAddress addr_dest = InetAddress.getByName(table.get(i).ip);
 
                     outPacket = new DatagramPacket(msg.getBytes(), msg.getBytes().length,
