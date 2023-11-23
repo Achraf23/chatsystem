@@ -86,35 +86,51 @@ public class DiscoverySystem {
         String input = myObj.nextLine();
 
         DiscoverySystem c = new DiscoverySystem();
-        c.tryConnection(input);
+        try {
+            c.tryConnection(input);
+        }catch (IOException e){
+            System.out.println("Try another pseudonym");
+            throw e;
+        }
 
         do{
             System.out.println("1.Change Pseudo");
             System.out.println("2.Log Out and Quit");
+            System.out.println("3.Display Contact List");
 
-            do{
-                input=myObj.nextLine();
-                switch (input){
-                    case "1":
-                        System.out.println("Enter username");
-                        input = myObj.nextLine();
-                        try {
-                            c.changePseudo(input);
-                        }catch (IOException e){
-                            System.out.println("User alreay taken");
-                            c.logOut();
+            input=myObj.nextLine();
+            switch (input){
+                case "1":
+                    System.out.println("Enter username");
+                    input = myObj.nextLine();
+                    try {
+                        c.changePseudo(input);
+                    }catch (IOException e){
+                        System.out.println("User alreay taken");
+                    }
+                    break;
+
+                case "2":
+                    c.logOut();
+                    break;
+                case "3":
+                    if(ContactList.getInstance().table.isEmpty())
+                        System.out.println("Liste vide\n");
+                    else{
+                        System.out.println("****debut liste****\n");
+                        for(int i=0;i<ContactList.getInstance().table.size();i++){
+                            System.out.println(ContactList.getInstance().table.get(i).pseudo);
                         }
-                        break;
+                        System.out.println("****fin liste****\n");
+                    }
 
-                    case "2":
-                        c.logOut();
-                        break;
+                    break;
 
-                    default:
-                        System.out.println("Pas compris");
-                        break;
-                }
-            }while (input.equals("3"));
+                default:
+                    System.out.println("Pas compris");
+                    break;
+            }
+//            }while (!input.equals("3") & !input.equals("2") & !input.equals("1"));
 
 
         }while (!input.equals("2"));
