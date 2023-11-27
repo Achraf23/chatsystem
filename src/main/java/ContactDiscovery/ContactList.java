@@ -7,15 +7,20 @@ import java.util.ArrayList;
  *
  */
 public class ContactList {
-
     private static ContactList contactList = null;
     public ArrayList<PseudoIP> table;
+
+    public interface Observer{
+        void newContactAdded(PseudoIP pseudoIP);
+    }
+    ArrayList<Observer> observers;
 
     /** ContactList Constructor
      *
      */
     public ContactList(){
         this.table = new ArrayList<PseudoIP>();
+        this.observers = new ArrayList<Observer>();
     }
 
 
@@ -30,13 +35,21 @@ public class ContactList {
         return contactList;
     }
 
+    public synchronized void addObserver(Observer obs){
+        this.observers.add(obs);
+    }
+
     /** Adds a User through their Pseudo and IP address in the Contact List
      *
      * @param pseudo The associated pseudo of the user
      * @param ip The associated IP address of the user
      */
     public void addLine(String pseudo,String ip){
-        table.add(new PseudoIP(pseudo,ip));
+        PseudoIP contact = new PseudoIP(pseudo,ip);
+        table.add(contact);
+        for(Observer obs:observers ){
+            obs.newContactAdded(contact);
+        }
     }
 
     /** Verifies that our pseudo is unique by consulting the contactList table
