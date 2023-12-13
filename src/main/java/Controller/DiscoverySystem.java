@@ -1,4 +1,5 @@
 package Controller;
+import ContactDiscovery.Contact;
 import ContactDiscovery.ContactList;
 import ContactDiscovery.User;
 
@@ -12,6 +13,7 @@ public class DiscoverySystem {
 
     ClientUDP client;
     EchoServer server;
+    ContactList contactList;
 
     /** ConnectionController Constructor
      *
@@ -20,6 +22,7 @@ public class DiscoverySystem {
     DiscoverySystem() throws IOException{
         client = new ClientUDP();
         server = new EchoServer();
+        contactList = ContactList.getInstance();
 
     }
 
@@ -34,6 +37,13 @@ public class DiscoverySystem {
 
         server.start(); ///launch server to listen to other users
         client.broadcastConnection("Hello"); //send broadcast to retrieve connected users nickname
+        contactList.addObserver(new ContactList.Observer() {
+            @Override
+            public void newContactAdded(Contact contact) {
+                System.out.println("contact added");
+
+            }
+        });
 
         //waiting a bit for the contactList to be initialized
         try {
@@ -43,7 +53,7 @@ public class DiscoverySystem {
         }
 
 
-        if(ContactList.getInstance().isUnique(nickname)){
+        if(contactList.isUnique(nickname)){
             User.getInstance().nickname = nickname;
         }else{
             server.interrupt();
@@ -52,7 +62,7 @@ public class DiscoverySystem {
 
         System.out.println("nickname="+User.getInstance().nickname+"\n");
         // send my pseudo only if there are other users connected
-        if(!ContactList.getInstance().table.isEmpty())
+        if(!contactList.table.isEmpty())
             client.sendMsgToOthers(User.getInstance().nickname);
         else System.out.println("I'm the only one\n");
 
@@ -71,7 +81,7 @@ public class DiscoverySystem {
     }
 
     public void changePseudo(String pseudo) throws IOException{
-        if(ContactList.getInstance().isUnique(pseudo)){
+        if(contactList.isUnique(pseudo)){
             User.getInstance().nickname = pseudo;
             System.out.println("nickname= "+pseudo+"\n");
             client.sendMsgToOthers(pseudo);

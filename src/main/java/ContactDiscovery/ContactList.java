@@ -12,7 +12,7 @@ public class ContactList {
     public ArrayList<Contact> table;
 
     public interface Observer{
-        void newContactAdded(Contact pseudoIP);
+        void newContactAdded(Contact contact);
     }
     ArrayList<Observer> observers;
 
@@ -45,7 +45,7 @@ public class ContactList {
      * @param pseudo The associated pseudo of the user
      * @param ip The associated IP address of the user
      */
-    public void addLine(String pseudo,String ip){
+    public synchronized void addLine(String pseudo,String ip){
         Contact contact = new Contact(pseudo,ip);
         table.add(contact);
         for(Observer obs:observers ){
