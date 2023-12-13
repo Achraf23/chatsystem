@@ -1,11 +1,10 @@
 package Controller;
 import ContactDiscovery.ContactList;
-import ContactDiscovery.PseudoIP;
+import ContactDiscovery.Contact;
 import ContactDiscovery.User;
 
 import java.net.*;
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 /** Thread that listens to the message received by the client from others clients
@@ -36,7 +35,7 @@ class EchoServer extends Thread {
      * @return true if correctly removed, false otherwise
      */
     boolean findAndRemove(String ip){
-        ArrayList<PseudoIP> table = ContactList.getInstance().table;
+        ArrayList<Contact> table = ContactList.getInstance().table;
         for(int i=0;i<table.size();i++){
             if(table.get(i).ip.equals(ip)){
                 table.remove(i);

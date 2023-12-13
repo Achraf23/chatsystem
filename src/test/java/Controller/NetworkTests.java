@@ -1,9 +1,7 @@
 package Controller;
 
 import ContactDiscovery.ContactList;
-import ContactDiscovery.PseudoIP;
-import Controller.ClientUDP;
-import Controller.EchoServer;
+import ContactDiscovery.Contact;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -66,7 +64,7 @@ public class NetworkTests {
 
     @Test
     void testFindAndRemove(){
-        ContactList.getInstance().table.add(new PseudoIP("pseudo","127.0.0.1"));
+        ContactList.getInstance().table.add(new Contact("pseudo","127.0.0.1"));
         assertTrue(server.findAndRemove("127.0.0.1"));
 
     }

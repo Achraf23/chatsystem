@@ -1,6 +1,5 @@
 package ContactDiscovery;
 
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 /** Class that keeps track of the others users that are connected
@@ -9,13 +8,13 @@ import java.util.ArrayList;
 public class ContactList {
 
     private static ContactList contactList = null;
-    public ArrayList<PseudoIP> table;
+    public ArrayList<Contact> table;
 
     /** ContactList Constructor
      *
      */
     public ContactList(){
-        this.table = new ArrayList<PseudoIP>();
+        this.table = new ArrayList<Contact>();
     }
 
 
@@ -36,7 +35,7 @@ public class ContactList {
      * @param ip The associated IP address of the user
      */
     public void addLine(String pseudo,String ip){
-        table.add(new PseudoIP(pseudo,ip));
+        table.add(new Contact(pseudo,ip));
     }
 
     /** Verifies that our pseudo is unique by consulting the contactList table

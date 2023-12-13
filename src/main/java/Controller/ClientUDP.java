@@ -1,7 +1,6 @@
 package Controller;
 import ContactDiscovery.ContactList;
-import ContactDiscovery.PseudoIP;
-import Controller.EchoServer;
+import ContactDiscovery.Contact;
 
 import java.net.*;
 import java.io.*;
@@ -39,7 +38,7 @@ class ClientUDP {
      * @param msg the message to transmit
      */
     public void sendMsgToOthers(String msg) {
-        ArrayList<PseudoIP> table= ContactList.getInstance().table;
+        ArrayList<Contact> table= ContactList.getInstance().table;
         try{
             socket = new DatagramSocket();
 

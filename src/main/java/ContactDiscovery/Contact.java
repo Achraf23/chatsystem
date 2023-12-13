@@ -3,7 +3,7 @@ package ContactDiscovery;
 /** A user's identifiers: their pseudo and IP address
  *
  */
-public class PseudoIP {
+public class Contact {
     public String ip;
     public String pseudo;
 
@@ -12,7 +12,7 @@ public class PseudoIP {
      * @param pseudo The chosen pseudo
      * @param ip The associated IP address of our machine
      */
-    public PseudoIP(String pseudo,String ip){
+    public Contact(String pseudo, String ip){
         this.pseudo=pseudo;
         this.ip=ip;
     }
