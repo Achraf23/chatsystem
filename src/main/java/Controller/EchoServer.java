@@ -132,7 +132,7 @@ class EchoServer extends Thread {
                                     System.out.println("ip not found in ContactList\n");
                                 }
                             }else{
-                                //Save new pseudo user
+                                //Save new pseudo user or change pseudo of existing user
                                 String elt = received + "/" + packet.getAddress().toString();
                                 if(findAndRemove(packet.getAddress().getHostAddress())){
                                         System.out.println("pseudo has changed: "+elt);

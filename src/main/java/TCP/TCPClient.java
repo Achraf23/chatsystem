@@ -18,7 +18,7 @@ public class TCPClient {
     }
 
     public String sendMessage(TCPMessage msg) throws IOException{
-        out.println(msg);
+        out.println(msg.content());
         String resp = in.readLine();
 
         return resp;

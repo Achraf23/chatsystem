@@ -1,5 +1,5 @@
 package TCP;
-import ContactDiscovery.Contact;
+
 import ContactDiscovery.ContactList;
 
 import java.io.BufferedReader;
@@ -10,28 +10,46 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
-public class TCPServer {
+public class TCPServer extends Thread{
 
     private ServerSocket serverSocket;
     public static int TCP_Server_Port=6666;
 
 
     public interface Observer{
-        void newContactAdded(Contact contact);
+        void messageReceived(TCPMessage msg);
     }
-    ArrayList<ContactList.Observer> observers;
+    ArrayList<TCPServer.Observer> observers;
 
-    public void start() throws IOException{
-        serverSocket = new ServerSocket(TCP_Server_Port);
-        while (true)
-            new EchoClientHandler(serverSocket.accept()).start();
+    TCPServer(){
+        this.observers = new ArrayList<Observer>();
     }
 
-    public void stop() throws IOException{
-        serverSocket.close();
+    public void run() {
+        try {
+
+            serverSocket = new ServerSocket(TCP_Server_Port);
+            while (true){
+                try{
+                    new EchoClientHandler(serverSocket.accept()).start();
+                }catch (IOException e){
+                    System.out.println("Server Accept exception: " + e);
+                }
+            }
+
+        }catch (IOException e){
+            System.out.println("new Server Socket exception: "+e);
+        }
+
+
     }
 
-    private static class EchoClientHandler extends Thread {
+    public synchronized void addObserver(TCPServer.Observer obs){
+        this.observers.add(obs);
+    }
+
+
+    private class EchoClientHandler extends Thread {
         private Socket clientSocket;
         private PrintWriter out;
         private BufferedReader in;
@@ -54,12 +72,16 @@ public class TCPServer {
                 String inputLine;;
                 while ((inputLine = in.readLine()) != null) {
 
+                    //Notify the observers that the server received a message
+                    for(TCPServer.Observer obs:observers){
+                        obs.messageReceived(new TCPMessage(inputLine));
+                    }
+
                     if (".".equals(inputLine)) {
                         out.println("bye");
                         break;
                     }
                     out.println(inputLine);
-                    System.out.println("fini");
 
                 }
             }catch(IOException e){

@@ -40,7 +40,8 @@ public class DiscoverySystem {
         contactList.addObserver(new ContactList.Observer() {
             @Override
             public void newContactAdded(Contact contact) {
-                System.out.println("contact added");
+                System.out.println("contact added "+contact.pseudo);
+
 
             }
         });
