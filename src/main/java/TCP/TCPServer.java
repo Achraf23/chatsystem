@@ -6,6 +6,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -80,7 +81,7 @@ public class TCPServer {
 
                     //Notify the observers that the server received a message
                     for(TCPServer.Observer obs:observers){
-                        obs.messageReceived(new TCPMessage(inputLine));
+                        obs.messageReceived(new TCPMessage(inputLine, InetAddress.getLocalHost()));
                     }
 
                     if (".".equals(inputLine)) {

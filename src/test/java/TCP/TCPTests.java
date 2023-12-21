@@ -30,20 +30,34 @@ public class TCPTests {
         server.start(TCPServer.TCP_Server_Port);
         server.addObserver(msg -> {
             receivedMessages.add(msg.content());
+
         });
 
         Thread.sleep(100);
 
         client.startConnection("127.0.0.1",TCPServer.TCP_Server_Port);
         for (String msg : testMessages) {
-            client.sendMessage(new TCPMessage(msg));
+            client.sendMessage(new TCPMessage(msg,InetAddress.getLocalHost()));
         }
 
-        client.stopConnection();
         server.stop();
+        client.stopConnection();
+
 
         assertEquals(testMessages.size(), receivedMessages.size());
         assertEquals(testMessages, receivedMessages);
+    }
+
+    @Test
+    void originIpTestMessage() throws Exception{
+        server.start(TCPServer.TCP_Server_Port);
+        List<InetAddress> address = new ArrayList<InetAddress>();
+        server.addObserver(msg -> {
+            address.add(msg.origin());
+        });
+        client.startConnection("127.0.0.1",TCPServer.TCP_Server_Port);
+        client.sendMessage(new TCPMessage("test",InetAddress.getLocalHost()));
+        assertEquals(InetAddress.getLocalHost(),address.get(0));
     }
 
 }
