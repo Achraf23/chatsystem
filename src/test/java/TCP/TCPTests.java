@@ -27,7 +27,7 @@ public class TCPTests {
         List<String> testMessages = Arrays.asList("alice", "bob", "chloe",  "éàç");
 
         List<String> receivedMessages = new ArrayList<>();
-        server.start();
+        server.start(TCPServer.TCP_Server_Port);
         server.addObserver(msg -> {
             receivedMessages.add(msg.content());
         });
@@ -38,6 +38,9 @@ public class TCPTests {
         for (String msg : testMessages) {
             client.sendMessage(new TCPMessage(msg));
         }
+
+        client.stopConnection();
+        server.stop();
 
         assertEquals(testMessages.size(), receivedMessages.size());
         assertEquals(testMessages, receivedMessages);

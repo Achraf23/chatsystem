@@ -10,7 +10,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
-public class TCPServer extends Thread{
+public class TCPServer {
 
     private ServerSocket serverSocket;
     public static int TCP_Server_Port=6666;
@@ -25,23 +25,29 @@ public class TCPServer extends Thread{
         this.observers = new ArrayList<Observer>();
     }
 
-    public void run() {
-        try {
+    public void start(int port) throws IOException{
 
-            serverSocket = new ServerSocket(TCP_Server_Port);
-            while (true){
-                try{
-                    new EchoClientHandler(serverSocket.accept()).start();
-                }catch (IOException e){
-                    System.out.println("Server Accept exception: " + e);
+        serverSocket = new ServerSocket(port);
+        Thread server= new Thread(){
+            public void run(){
+
+                while (true){
+                    try{
+                        new EchoClientHandler(serverSocket.accept()).start();
+                    }catch (IOException e){
+                        System.out.println("Server Accept exception: " + e);
+                    }
                 }
+
+
             }
+        };
 
-        }catch (IOException e){
-            System.out.println("new Server Socket exception: "+e);
-        }
+        server.start();
+    }
 
-
+    public void stop() throws IOException{
+        serverSocket.close();
     }
 
     public synchronized void addObserver(TCPServer.Observer obs){
