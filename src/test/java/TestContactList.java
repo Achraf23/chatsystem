@@ -8,7 +8,7 @@ public class TestContactList {
     private int uniqueElement(String pseudo){
         int count=0;
         for(int i=0;i<ContactList.getInstance().table.size();i++){
-            if(pseudo.equals(ContactList.getInstance().table.get(i).pseudo)){
+            if(pseudo.equals(ContactList.getInstance().table.get(i).pseudo())){
                 count++;
             }
         }
@@ -18,7 +18,7 @@ public class TestContactList {
     @Test
     void testContactListValid(){
         for(int i=0;i<ContactList.getInstance().table.size();i++){
-            assertEquals(1,uniqueElement(ContactList.getInstance().table.get(i).pseudo));
+            assertEquals(1,uniqueElement(ContactList.getInstance().table.get(i).pseudo()));
         }
     }
 

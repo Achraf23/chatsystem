@@ -121,7 +121,7 @@ public class DiscoverySystem {
                     else{
                         System.out.println("****debut liste****\n");
                         for(int i=0;i<ContactList.getInstance().table.size();i++){
-                            System.out.println(ContactList.getInstance().table.get(i).pseudo);
+                            System.out.println(ContactList.getInstance().table.get(i).pseudo());
                         }
                         System.out.println("****fin liste****\n");
                     }

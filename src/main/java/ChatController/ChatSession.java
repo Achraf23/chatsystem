@@ -16,7 +16,7 @@ public class ChatSession {
     ChatSession(Contact contact) throws IOException {
         this.contact = contact;
         this.client = new TCPClient();
-        client.startConnection(this.contact.ip, TCPServer.TCP_Server_Port);
+        client.startConnection(this.contact.ip(), TCPServer.TCP_Server_Port);
     }
 
     void addMessage(TCPMessage msg) throws Exception {

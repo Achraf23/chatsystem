@@ -61,7 +61,7 @@ public class ContactList {
     public boolean isUnique(String pseudo){
         ContactList contactList = ContactList.getInstance();
         for(int i=0;i<contactList.table.size();i++){
-            if(pseudo.equals(contactList.table.get(i).pseudo)){
+            if(pseudo.equals(contactList.table.get(i).pseudo())){
                 return false;
             }
         }
@@ -72,7 +72,7 @@ public class ContactList {
     public Contact getIpFromContact(String ip){
         ContactList contactList = ContactList.getInstance();
         for(int i=0;i<contactList.table.size();i++){
-            if(ip.equals(contactList.table.get(i).ip)){
+            if(ip.equals(contactList.table.get(i).ip())){
                 return contactList.table.get(i);
             }
         }

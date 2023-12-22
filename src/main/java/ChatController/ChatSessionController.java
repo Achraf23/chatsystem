@@ -7,6 +7,7 @@ import TCP.TCPServer;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 public class ChatSessionController {
@@ -23,12 +24,17 @@ public class ChatSessionController {
 
             @Override
             public void newConnection(InetAddress addr) {
-                Contact contact = ContactList.getInstance().getIpFromContact(addr.getHostAddress());
-                try {
-                    startChatSession(contact);
-                }catch (IOException e){
-                    System.out.println(e);
+                if(!addr.getHostAddress().equals("127.0.0.1")){
+                    Contact contact = ContactList.getInstance().getIpFromContact(addr.getHostAddress());
+                    try {
+                        startChatSession(contact);
+                    }catch (IOException e){
+                        System.out.println("Observer error : "+e);
+                    }
                 }
+
+
+
             }
 
         });
@@ -44,7 +50,7 @@ public class ChatSessionController {
 
     void addMessageReceived(TCPMessage msg) throws Exception{
         for(ChatSession conversation : conversations){
-            if(conversation.contact.ip.equals(msg.origin().getHostAddress())){
+            if(conversation.contact.ip().equals(msg.origin().getHostAddress())){
                 conversation.addMessage(msg);
             }
         }

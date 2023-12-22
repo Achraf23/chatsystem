@@ -37,7 +37,7 @@ class EchoServer extends Thread {
     boolean findAndRemove(String ip){
         ArrayList<Contact> table = ContactList.getInstance().table;
         for(int i=0;i<table.size();i++){
-            if(table.get(i).ip.equals(ip)){
+            if(table.get(i).ip().equals(ip)){
                 table.remove(i);
                 return true;
             }
