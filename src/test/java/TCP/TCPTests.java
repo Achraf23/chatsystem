@@ -93,6 +93,7 @@ public class TCPTests {
 
         });
         client.startConnection("127.0.0.1",TCPServer.TCP_Server_Port);
+        System.out.println(ipConnection.get(0));
         assertEquals(InetAddress.getLocalHost(),ipConnection.get(0));
     }
 

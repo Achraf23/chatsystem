@@ -69,4 +69,15 @@ public class ContactList {
     }
 
 
+    public Contact getIpFromContact(String ip){
+        ContactList contactList = ContactList.getInstance();
+        for(int i=0;i<contactList.table.size();i++){
+            if(ip.equals(contactList.table.get(i).ip)){
+                return contactList.table.get(i);
+            }
+        }
+        return null;
+    }
+
+
 }
