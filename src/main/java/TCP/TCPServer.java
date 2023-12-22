@@ -19,6 +19,7 @@ public class TCPServer {
 
     public interface Observer{
         void messageReceived(TCPMessage msg);
+        void newConnection(InetAddress origin);
     }
     ArrayList<TCPServer.Observer> observers;
 
@@ -34,7 +35,13 @@ public class TCPServer {
 
                 while (true){
                     try{
-                        new EchoClientHandler(serverSocket.accept()).start();
+                        Socket sock;
+                        new EchoClientHandler((sock = serverSocket.accept())).start();
+
+                        //Notify the observers that the server received a connection
+                        for(TCPServer.Observer obs:observers){
+                            obs.newConnection(sock.getInetAddress());
+                        }
                     }catch (IOException e){
                         System.out.println("Server Accept exception: " + e);
                     }

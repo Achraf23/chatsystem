@@ -1,5 +1,7 @@
 package TCP;
 
+import ContactDiscovery.Contact;
+import ContactDiscovery.ContactList;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -28,8 +30,17 @@ public class TCPTests {
 
         List<String> receivedMessages = new ArrayList<>();
         server.start(TCPServer.TCP_Server_Port);
-        server.addObserver(msg -> {
-            receivedMessages.add(msg.content());
+
+        server.addObserver(new TCPServer.Observer() {
+            @Override
+            public void messageReceived(TCPMessage msg) {
+                receivedMessages.add(msg.content());
+            }
+
+            @Override
+            public void newConnection(InetAddress addr){
+
+            }
 
         });
 
@@ -51,13 +62,38 @@ public class TCPTests {
     @Test
     void originIpTestMessage() throws Exception{
         server.start(TCPServer.TCP_Server_Port);
-        List<InetAddress> address = new ArrayList<InetAddress>();
-        server.addObserver(msg -> {
-            address.add(msg.origin());
+        List<InetAddress> addressMsg = new ArrayList<InetAddress>();
+        server.addObserver(new TCPServer.Observer() {
+            @Override
+            public void messageReceived(TCPMessage msg) {
+                addressMsg.add(msg.origin());
+            }
+            @Override
+            public void newConnection(InetAddress addr){
+
+            }
+
         });
         client.startConnection("127.0.0.1",TCPServer.TCP_Server_Port);
         client.sendMessage(new TCPMessage("test",InetAddress.getLocalHost()));
-        assertEquals(InetAddress.getLocalHost(),address.get(0));
+        assertEquals(InetAddress.getLocalHost(),addressMsg.get(0));
+    }
+
+    @Test
+    void testNewConnection() throws Exception{
+        server.start(TCPServer.TCP_Server_Port);
+        List<InetAddress> ipConnection = new ArrayList<InetAddress>();
+        server.addObserver(new TCPServer.Observer() {
+            @Override
+            public void messageReceived(TCPMessage msg) {}
+            @Override
+            public void newConnection(InetAddress ip){
+                ipConnection.add(ip);
+            }
+
+        });
+        client.startConnection("127.0.0.1",TCPServer.TCP_Server_Port);
+        assertEquals(InetAddress.getLocalHost(),ipConnection.get(0));
     }
 
 }
