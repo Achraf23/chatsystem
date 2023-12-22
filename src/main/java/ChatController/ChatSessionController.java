@@ -13,7 +13,7 @@ public class ChatSessionController {
     ArrayList<ChatSession> conversations;
     TCPServer server;
 
-    ChatSessionController(){
+    ChatSessionController() throws IOException{
         conversations = new ArrayList<ChatSession>();
         server = new TCPServer();
         server.addObserver(new TCPServer.Observer() {
@@ -32,16 +32,20 @@ public class ChatSessionController {
             }
 
         });
+
+        server.start(TCPServer.TCP_Server_Port);
     }
+
+    void launchServer () throws IOException {server.start(TCPServer.TCP_Server_Port);}
 
     void startChatSession(Contact contact) throws IOException {
         conversations.add(new ChatSession(contact));
     }
 
     void addMessageReceived(TCPMessage msg) throws Exception{
-        for(int i=0;i<conversations.size();i++){
-            if(conversations.get(i).contact.ip.equals(msg.origin().getHostAddress())){
-                conversations.get(i).addMessage(msg);
+        for(ChatSession conversation : conversations){
+            if(conversation.contact.ip.equals(msg.origin().getHostAddress())){
+                conversation.addMessage(msg);
             }
         }
     }
