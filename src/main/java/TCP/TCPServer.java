@@ -23,7 +23,7 @@ public class TCPServer {
     }
     ArrayList<TCPServer.Observer> observers;
 
-    TCPServer(){
+    public TCPServer(){
         this.observers = new ArrayList<Observer>();
     }
 
