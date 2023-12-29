@@ -2,6 +2,7 @@ package ChatController;
 
 import ContactDiscovery.Contact;
 import ContactDiscovery.ContactList;
+import TCP.TCPClient;
 import TCP.TCPMessage;
 import TCP.TCPServer;
 
@@ -11,50 +12,39 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 public class ChatSessionController {
-    ArrayList<ChatSession> conversations;
     TCPServer server;
+    TCPClient client;
 
-    ChatSessionController() throws IOException{
-        conversations = new ArrayList<ChatSession>();
+    public ChatSessionController() throws IOException{
+        client = new TCPClient();
         server = new TCPServer();
-        server.addObserver(new TCPServer.Observer() {
-            @Override
-            public void messageReceived(TCPMessage msg) {
+        server.addObserver(msg -> {
+            try{
+                storeMessage(msg);
+            }catch (Exception e){
+                System.out.println("Observer error: "+e);
             }
-
-            @Override
-            public void newConnection(InetAddress addr) {
-                if(!addr.getHostAddress().equals("127.0.0.1")){
-                    Contact contact = ContactList.getInstance().getIpFromContact(addr.getHostAddress());
-                    try {
-                        startChatSession(contact);
-                    }catch (IOException e){
-                        System.out.println("Observer error : "+e);
-                    }
-                }
-
-
-
-            }
-
         });
 
         server.start(TCPServer.TCP_Server_Port);
     }
 
-    void launchServer () throws IOException {server.start(TCPServer.TCP_Server_Port);}
 
-    void startChatSession(Contact contact) throws IOException {
-        conversations.add(new ChatSession(contact));
+    public void sendMessage(Contact contact,TCPMessage msg) throws Exception{
+        client.startConnection(contact.ip(),TCPServer.TCP_Server_Port);
+        client.sendMessage(msg);
+        client.stopConnection();
+        storeMessage(msg);
     }
 
-    void addMessageReceived(TCPMessage msg) throws Exception{
-        for(ChatSession conversation : conversations){
-            if(conversation.contact.ip().equals(msg.origin().getHostAddress())){
-                conversation.addMessage(msg);
-            }
-        }
+    private void storeMessage(TCPMessage msg) throws Exception{
+//        for(ChatSession conversation : conversations){
+//            if(conversation.contact.ip().equals(msg.origin().getHostAddress())){
+//                conversation.addMessage(msg);
+//            }
+//        }
     }
+
 
 
 

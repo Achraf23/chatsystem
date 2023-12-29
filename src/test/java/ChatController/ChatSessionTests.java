@@ -16,11 +16,4 @@ public class ChatSessionTests {
         chatSessionController = new ChatSessionController();
     }
 
-    @Test
-    void startSessionTest() throws IOException {
-        Contact contact = new Contact("bob","127.0.0.1");
-        chatSessionController.startChatSession(contact);
-        assertEquals(contact,chatSessionController.conversations.get(0).contact);
-
-    }
 }

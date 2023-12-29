@@ -10,16 +10,18 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class TCPServer {
 
+    private static final Logger LOGGER = LogManager.getLogger(TCPServer.class);
     private ServerSocket serverSocket;
     public static int TCP_Server_Port=6666;
 
 
     public interface Observer{
         void messageReceived(TCPMessage msg);
-        void newConnection(InetAddress origin);
     }
     ArrayList<TCPServer.Observer> observers;
 
@@ -38,10 +40,7 @@ public class TCPServer {
                         Socket sock;
                         new EchoClientHandler((sock = serverSocket.accept())).start();
 
-                        //Notify the observers that the server received a connection
-                        for(TCPServer.Observer obs:observers){
-                            obs.newConnection(sock.getInetAddress());
-                        }
+
                     }catch (IOException e){
                         System.out.println("Server Accept exception: " + e);
                     }
@@ -83,19 +82,15 @@ public class TCPServer {
             }
 
             try{
-                String inputLine;;
-                while ((inputLine = in.readLine()) != null) {
+                String msg;;
+                while ((msg = in.readLine()) != null) {
+                    LOGGER.trace("Received on port " + clientSocket.getLocalPort() + ": " + msg + " from " + clientSocket.getInetAddress());
 
                     //Notify the observers that the server received a message
                     for(TCPServer.Observer obs:observers){
-                        obs.messageReceived(new TCPMessage(inputLine, InetAddress.getLocalHost()));
+                        obs.messageReceived(new TCPMessage(msg, InetAddress.getLocalHost()));
                     }
 
-                    if (".".equals(inputLine)) {
-                        out.println("bye");
-                        break;
-                    }
-                    out.println(inputLine);
 
                 }
             }catch(IOException e){

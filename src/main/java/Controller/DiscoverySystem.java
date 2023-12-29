@@ -1,4 +1,5 @@
 package Controller;
+import ChatController.ChatSessionController;
 import ContactDiscovery.Contact;
 import ContactDiscovery.ContactList;
 import ContactDiscovery.User;
@@ -85,28 +86,32 @@ public class DiscoverySystem {
 
         Scanner myObj = new Scanner(System.in);  // Create a Scanner object
         System.out.println("Enter username");
-        String input = myObj.nextLine();
+        String username = myObj.nextLine();
 
         DiscoverySystem c = new DiscoverySystem();
         try {
-            c.tryConnection(input);
+            c.tryConnection(username);
         }catch (IOException e){
             System.out.println("Try another pseudonym");
             throw e;
         }
+
+        String choice;
+        ChatSessionController controller = new ChatSessionController();
+
 
         do{
             System.out.println("1.Change Pseudo");
             System.out.println("2.Log Out and Quit");
             System.out.println("3.Display Contact List");
 
-            input=myObj.nextLine();
-            switch (input){
+            choice=myObj.nextLine();
+            switch (choice){
                 case "1":
                     System.out.println("Enter username");
-                    input = myObj.nextLine();
+                    username = myObj.nextLine();
                     try {
-                        c.changePseudo(input);
+                        c.changePseudo(username);
                     }catch (IOException e){
                         System.out.println("User alreay taken");
                     }
@@ -134,12 +139,7 @@ public class DiscoverySystem {
             }
 
 
-        }while (!input.equals("2"));
-
-
-
-
-
+        }while (!choice.equals("2"));
 
 
     }
