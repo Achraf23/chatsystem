@@ -33,10 +33,6 @@ public class TCPTests {
                 receivedMessages.add(msg.content());
             }
 
-            @Override
-            public void newConnection(InetAddress addr){
-
-            }
 
         });
 
@@ -67,10 +63,7 @@ public class TCPTests {
             public void messageReceived(TCPMessage msg) {
                 addressMsg.add(msg.origin());
             }
-            @Override
-            public void newConnection(InetAddress addr){
 
-            }
 
         });
         client.startConnection("127.0.0.1",TCPServer.TCP_Server_Port);
@@ -93,10 +86,6 @@ public class TCPTests {
         server.addObserver(new TCPServer.Observer() {
             @Override
             public void messageReceived(TCPMessage msg) {}
-            @Override
-            public void newConnection(InetAddress ip){
-                ipConnection.add(ip);
-            }
 
         });
 
