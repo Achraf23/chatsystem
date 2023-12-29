@@ -67,16 +67,13 @@ class EchoServer extends Thread {
 
         //je receive si jai rien recu et si mon thread na pas ete interrompu
         while (!receive && !this.isInterrupted()){
-            try{
-                try {
-                    socket.receive(packet);
-                    receive=true;
-                }catch (SocketTimeoutException s){
-                    // Timeout normal
-                }
-            }catch (IOException e){
-                throw new IOException("Socket.receive Error");
+            try {
+                socket.receive(packet);
+                receive=true;
+            }catch (SocketTimeoutException s){
+                // Timeout normal
             }
+
         }
 
     }

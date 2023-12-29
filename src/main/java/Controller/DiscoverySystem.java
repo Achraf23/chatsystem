@@ -97,7 +97,7 @@ public class DiscoverySystem {
         }
 
         String choice;
-        ChatSessionController controller = new ChatSessionController();
+//        ChatSessionController controller = new ChatSessionController();
 
 
         do{
@@ -119,6 +119,7 @@ public class DiscoverySystem {
 
                 case "2":
                     c.logOut();
+                    System.out.println("quit");
                     break;
                 case "3":
                     if(ContactList.getInstance().table.isEmpty())
