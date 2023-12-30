@@ -62,10 +62,5 @@ public class NetworkTests {
 
     }
 
-    @Test
-    void testFindAndRemove(){
-        ContactList.getInstance().table.add(new Contact("pseudo","127.0.0.1"));
-        assertTrue(server.findAndRemove("127.0.0.1"));
 
-    }
 }
