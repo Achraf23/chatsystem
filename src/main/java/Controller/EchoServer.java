@@ -30,20 +30,6 @@ class EchoServer extends Thread {
         socket = new DatagramSocket(Server_Port);
     }
 
-    /** Remove the given IP address from the Contact list
-     * @param ip Wanted IP address as a String
-     * @return true if correctly removed, false otherwise
-     */
-    boolean findAndRemove(String ip){
-        ArrayList<Contact> table = ContactList.getInstance().table;
-        for(int i=0;i<table.size();i++){
-            if(table.get(i).ip().equals(ip)){
-                table.remove(i);
-                return true;
-            }
-        }
-        return false;
-    }
 
     /** Check if the datagram received has been sent by me
      *
@@ -125,16 +111,16 @@ class EchoServer extends Thread {
                             if (received.equals("disconnect")) {
                                 //Disconnection request
                                 System.out.println("received disconnect");
-                                if (!findAndRemove(packet.getAddress().getHostAddress())) {
+                                if (!ContactList.getInstance().removeContact(packet.getAddress().getHostAddress())) {
                                     System.out.println("ip not found in ContactList\n");
                                 }
                             }else{
                                 //Save new pseudo user or change pseudo of existing user
                                 String elt = received + "/" + packet.getAddress().toString();
-                                if(findAndRemove(packet.getAddress().getHostAddress())){
+                                if(ContactList.getInstance().removeContact(packet.getAddress().getHostAddress())){
                                         System.out.println("pseudo has changed: "+elt);
                                 }
-                                ContactList.getInstance().addLine(received, packet.getAddress().getHostAddress());
+                                ContactList.getInstance().addContact(received, packet.getAddress().getHostAddress());
                             }
                         }
                     } //else {System.out.println("received same address "+packet.getAddress().getHostAddress());}

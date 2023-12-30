@@ -12,7 +12,8 @@ public class ContactList {
     public ArrayList<Contact> table;
 
     public interface Observer{
-        void newContactAdded(Contact contact);
+        void newContact(Contact contact);
+        void contactRemoved();
     }
     ArrayList<Observer> observers;
 
@@ -45,11 +46,11 @@ public class ContactList {
      * @param pseudo The associated pseudo of the user
      * @param ip The associated IP address of the user
      */
-    public synchronized void addLine(String pseudo,String ip){
+    public synchronized void addContact(String pseudo,String ip){
         Contact contact = new Contact(pseudo,ip);
         table.add(contact);
         for(Observer obs:observers ){
-            obs.newContactAdded(contact);
+            obs.newContact(contact);
         }
     }
 
@@ -66,6 +67,24 @@ public class ContactList {
             }
         }
         return true;
+    }
+
+    public synchronized boolean removeContact(String ip){
+        boolean res=false;
+        ArrayList<Contact> table = ContactList.getInstance().table;
+        for(int i=0;i<table.size();i++){
+            if(table.get(i).ip().equals(ip)){
+                table.remove(i);
+                res = true;
+                break;
+            }
+        }
+
+        for(Observer obs:observers ){
+            obs.contactRemoved();
+        }
+
+        return res;
     }
 
 
