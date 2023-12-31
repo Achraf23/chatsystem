@@ -25,7 +25,7 @@ public class TCPTests {
         List<String> testMessages = Arrays.asList("alice", "bob", "chloe",  "éàç");
 
         List<String> receivedMessages = new ArrayList<>();
-        server.start(TCPServer.TCP_Server_Port);
+        server.start();
 
         server.addObserver(msg -> receivedMessages.add(msg.content()));
 
@@ -51,7 +51,7 @@ public class TCPTests {
         TCPClient client = new TCPClient();
         TCPServer server = new TCPServer();
 
-        server.start(TCPServer.TCP_Server_Port);
+        server.start();
         List<InetAddress> addressMsg = new ArrayList<InetAddress>();
         server.addObserver(msg -> addressMsg.add(msg.origin()));
         client.startConnection("127.0.0.1",TCPServer.TCP_Server_Port);

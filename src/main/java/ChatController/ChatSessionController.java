@@ -12,7 +12,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 public class ChatSessionController {
-    TCPServer server;
+    public TCPServer server;
     TCPClient client;
 
     public ChatSessionController() throws IOException{
@@ -26,7 +26,7 @@ public class ChatSessionController {
             }
         });
 
-        server.start(TCPServer.TCP_Server_Port);
+        server.start();
     }
 
 

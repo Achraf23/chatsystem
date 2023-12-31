@@ -19,7 +19,7 @@ public class DiscoverySystem {
      *
      * @throws IOException
      */
-    DiscoverySystem() throws IOException{
+    public DiscoverySystem() throws IOException{
         client = new ClientUDP();
         server = new EchoServer();
 
@@ -81,7 +81,6 @@ public class DiscoverySystem {
         }else throw new IOException("Pseudo already taken");
     }
 
-    //TODO: Main segment
     public static void main(String[] args) throws Exception {
 
         Scanner myObj = new Scanner(System.in);  // Create a Scanner object
