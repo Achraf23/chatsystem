@@ -1,22 +1,28 @@
 package GUI;
 
+import TCP.TCPMessage;
+import TCP.TCPServer;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-public class ChatSessionView extends JPanel implements ActionListener {
+public class ChatSessionView extends JPanel implements ActionListener, TCPServer.Observer {
 
     JPanel conversationPanel;
     ArrayList<String> messages;
     JTextField textField;
+    String contact;
 
     ChatSessionView(String contact){
         super();
         setLayout(new BorderLayout());
 
         messages = new ArrayList<String>();
+
+        this.contact = contact;
 
         conversationPanel = new JPanel();
         conversationPanel.setLayout(new BoxLayout(conversationPanel,BoxLayout.Y_AXIS));
@@ -42,12 +48,23 @@ public class ChatSessionView extends JPanel implements ActionListener {
         this.add(conversationPanel);
 
 
+
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        addMessageToConversation("Me");
+
+    }
+
+    @Override
+    public void messageReceived(TCPMessage msg) {
+        addMessageToConversation(contact);
+    }
+
+    void addMessageToConversation(String sender){
         messages.add(textField.getText());
-        conversationPanel.add(new JLabel("[Me]: "+textField.getText()));
+        conversationPanel.add(new JLabel("["+sender+"]: "+textField.getText()));
         this.revalidate();
         this.repaint();
 

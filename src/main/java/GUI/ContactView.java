@@ -3,16 +3,19 @@ package GUI;
 import ContactDiscovery.Contact;
 import ContactDiscovery.ContactList;
 
-import java.awt.event.MouseEvent;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
-public class ContactView extends JPanel implements MouseListener, ContactList.Observer {
+public class ContactView extends JPanel implements ContactList.Observer, ActionListener {
 
-    public ArrayList<CustomizedButton> contacts;
-    JPanel contactPanel;
+    public interface Observer{
+        void contactClicked(String contact);
+    }
+
+    ArrayList<ContactView.Observer> observers;
 
     public ContactView(){
         super();
@@ -20,61 +23,31 @@ public class ContactView extends JPanel implements MouseListener, ContactList.Ob
         this.setPreferredSize(new Dimension(View.width_frame/4,View.height_frame));
         this.setBorder(BorderFactory.createTitledBorder("Contacts"));
 
-        JPanel titlePanel = new JPanel();
-//        JLabel title = new JLabel("Contact List");
-//        titlePanel.add(title);
-//        titlePanel.setBackground(Color.RED);
-//        this.add(title);
-
-        contacts = new ArrayList<CustomizedButton>();
-        contactPanel = new JPanel();
-        contactPanel.setLayout(new BoxLayout(contactPanel, BoxLayout.Y_AXIS));
-        this.add(contactPanel,BorderLayout.CENTER);
         ContactList.getInstance().addObserver(this);
+
+        observers = new ArrayList<Observer>();
+
 
     }
 
+    public synchronized void addObserver(ContactView.Observer obs){
+        this.observers.add(obs);
+    }
 
 
     void updateContactPanel(){
-        contactPanel.removeAll();
-        for(Contact contact : ContactList.getInstance().table){
-            contactPanel.add(new CustomizedButton(contact.pseudo()));
+        removeAll();
+        ArrayList<Contact> contactList = ContactList.getInstance().table;
+        for(Contact contact : contactList){
+            CustomizedButton btn = new CustomizedButton(contact.pseudo());
+            btn.addActionListener(this);
+            add(btn);
         }
 
         this.revalidate();
         this.repaint();
     }
 
-    public void highlightButtons(Point cursor) {
-        for (JButton contact : contacts) {
-            Point buttonLocation = contact.getLocationOnScreen();
-            double west = buttonLocation.getX();
-            double east = buttonLocation.getX() + contact.getWidth();
-            double north = buttonLocation.getY();
-            double south = buttonLocation.getY() + contact.getHeight();
-            boolean inRow = cursor.getX() > west && cursor.getX() < east;
-            boolean inCol = cursor.getY() > north && cursor.getY() < south;
-            boolean inBounds = inRow || inCol;
-            contact.setBackground(inBounds ? new Color(0xFFFF00) : null);
-        }
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent event) {
-        highlightButtons(event.getLocationOnScreen());
-    }
-    @Override
-    public void mouseClicked(MouseEvent e) { }
-
-    @Override
-    public void mousePressed(MouseEvent e) { }
-
-    @Override
-    public void mouseReleased(MouseEvent e) { }
-
-    @Override
-    public void mouseExited(MouseEvent e) { }
 
     @Override
     public void newContact(Contact contact) {
@@ -84,5 +57,13 @@ public class ContactView extends JPanel implements MouseListener, ContactList.Ob
     @Override
     public void contactRemoved() {
         updateContactPanel();
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        String contact = ((JButton) e.getSource()).getText();
+        for(ContactView.Observer obs:observers ){
+            obs.contactClicked(contact);
+        }
     }
 }

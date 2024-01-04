@@ -8,11 +8,11 @@ import java.awt.*;
 
 public class View {
     JFrame frame;
-    ContactView contactView;
+    public ContactView contactView;
     static final int width_frame = 500;
     static final int height_frame = 300;
 
-    View(){
+    public View(){
         frame = new JFrame("Chat System");
         frame.setSize(width_frame,height_frame);
 
@@ -21,16 +21,19 @@ public class View {
 
         contactView = new ContactView();
         frame.add(contactView, BorderLayout.WEST);
+
         frame.setVisible(true);
 
-        JPanel conversation = new ChatSessionView("achraf");
-        frame.add(conversation);
+//        frame.add(new ChatSessionView("achraf"));
+
+        //Observes ContactView
+        contactView.addObserver(contact -> {
+            frame.add(new ChatSessionView(contact));
+            frame.revalidate();
+            frame.repaint();
+        });
+
+
     }
 
-    public static void main(String[] args)  {
-
-        View v = new View();
-        ContactList.getInstance().addContact("test1","0.0.0.0");
-        ContactList.getInstance().addContact("test2","0.0.0.0");
-    }
 }
