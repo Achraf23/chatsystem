@@ -44,13 +44,13 @@ public class View implements ChatSessionController.Observer,ChatSessionView.Obse
             //Attempt to get Conversation
             ChatSessionView conversation = getConversation(contact);
 
-
             if(conversation == null){
                 //First time talking with a contact
                 ChatSessionView newConversation = new ChatSessionView(contact);
-                newConversation.addObserver(this);
+                addConversation(newConversation);
+//                newConversation.addObserver(this);
                 activeConversation = newConversation;
-                conversations.add(activeConversation);
+//                conversations.add(activeConversation);
                 frame.add(activeConversation);
 
             }else{
@@ -59,7 +59,6 @@ public class View implements ChatSessionController.Observer,ChatSessionView.Obse
                 frame.add(conversation);
 
             }
-
 
 
             frame.revalidate();
@@ -71,6 +70,12 @@ public class View implements ChatSessionController.Observer,ChatSessionView.Obse
 
     public synchronized void addObserver(View.Observer obs){
         this.observers.add(obs);
+    }
+
+
+    void addConversation(ChatSessionView conversation){
+        conversation.addObserver(this);
+        conversations.add(conversation);
     }
 
 
@@ -86,11 +91,15 @@ public class View implements ChatSessionController.Observer,ChatSessionView.Obse
     @Override
     public void receivedMessageFromServer(String msg,Contact origin){
         ChatSessionView conversation = getConversation(origin);
-        if(conversation != null){
-            conversation.addMessageToConversation(msg,origin.pseudo());
+        if(conversation != null) {
+            conversation.addMessageToConversation(msg, origin.pseudo());
+        }else{
+            ChatSessionView newConversation = new ChatSessionView(origin);
+            newConversation.addMessageToConversation(msg,origin.pseudo());
+            addConversation(newConversation);
 
         }
-        else System.out.println("Add message conversation error");
+
 
     }
 
