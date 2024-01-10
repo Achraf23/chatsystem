@@ -88,7 +88,7 @@ public class TCPServer {
 
                     //Notify the observers that the server received a message
                     for(TCPServer.Observer obs:observers){
-                        obs.messageReceived(new TCPMessage(msg, InetAddress.getLocalHost()));
+                        obs.messageReceived(new TCPMessage(msg, clientSocket.getInetAddress()));
                     }
 
 

@@ -1,5 +1,7 @@
 package GUI;
 
+import ContactDiscovery.Contact;
+import TCP.TCPClient;
 import TCP.TCPMessage;
 import TCP.TCPServer;
 
@@ -7,16 +9,23 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.net.InetAddress;
 import java.util.ArrayList;
 
-public class ChatSessionView extends JPanel implements ActionListener, TCPServer.Observer {
+public class ChatSessionView extends JPanel implements ActionListener {
 
     JPanel conversationPanel;
     ArrayList<String> messages;
     JTextField textField;
-    String contact;
+    Contact contact;
+    ArrayList<Observer> observers;
 
-    ChatSessionView(String contact){
+    public interface Observer{
+        void sentMessage(String msg,Contact recipient);
+    }
+
+    ChatSessionView(Contact contact){
         super();
         setLayout(new BorderLayout());
 
@@ -47,26 +56,24 @@ public class ChatSessionView extends JPanel implements ActionListener, TCPServer
         this.add(bottom,BorderLayout.SOUTH);
         this.add(conversationPanel);
 
-
+        observers = new ArrayList<ChatSessionView.Observer>();
 
     }
+
+    public synchronized void addObserver(ChatSessionView.Observer obs){this.observers.add(obs);}
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        addMessageToConversation("Me");
-
+        addMessageToConversation(textField.getText(),"Me");
+        for(Observer obs : observers)
+            obs.sentMessage(textField.getText(),contact);
     }
 
-    @Override
-    public void messageReceived(TCPMessage msg) {
-        addMessageToConversation(contact);
-    }
-
-    void addMessageToConversation(String sender){
-        messages.add(textField.getText());
-        conversationPanel.add(new JLabel("["+sender+"]: "+textField.getText()));
+    public void addMessageToConversation(String msg,String sender){
+        this.messages.add(msg);
+        conversationPanel.add(new JLabel("["+sender+"]: "+msg));
         this.revalidate();
         this.repaint();
-
     }
+
 }

@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public class ContactView extends JPanel implements ContactList.Observer, ActionListener {
 
     public interface Observer{
-        void contactClicked(String contact);
+        void contactClicked(Contact contact);
     }
 
     ArrayList<ContactView.Observer> observers;
@@ -39,7 +39,7 @@ public class ContactView extends JPanel implements ContactList.Observer, ActionL
         removeAll();
         ArrayList<Contact> contactList = ContactList.getInstance().table;
         for(Contact contact : contactList){
-            CustomizedButton btn = new CustomizedButton(contact.pseudo());
+            CustomizedButton btn = new CustomizedButton(contact);
             btn.addActionListener(this);
             add(btn);
         }
@@ -52,18 +52,21 @@ public class ContactView extends JPanel implements ContactList.Observer, ActionL
     @Override
     public void newContact(Contact contact) {
         updateContactPanel();
-    }
+    } // Works also for changing pseudo because and we remove the contact and add a new one
 
     @Override
     public void contactRemoved() {
         updateContactPanel();
     }
 
+    /*
+    */
     @Override
     public void actionPerformed(ActionEvent e) {
-        String contact = ((JButton) e.getSource()).getText();
+        CustomizedButton contactBtn = ((CustomizedButton) e.getSource());
+
         for(ContactView.Observer obs:observers ){
-            obs.contactClicked(contact);
+            obs.contactClicked(contactBtn.contact);
         }
     }
 }

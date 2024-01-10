@@ -1,37 +1,35 @@
 import ChatController.ChatSessionController;
 import ContactDiscovery.ContactList;
 import Controller.DiscoverySystem;
+import GUI.ChatSessionView;
 import GUI.ContactView;
 import GUI.View;
+import TCP.TCPMessage;
 
+import java.io.IOException;
+import java.net.InetAddress;
 import java.util.Scanner;
 
 public class MainController {
-    DiscoverySystem discovery;
-    ChatSessionController chatController;
-    View view;
+    final DiscoverySystem discovery = new DiscoverySystem();
+    final ChatSessionController chatController = new ChatSessionController();
+    final View view = new View();
 
-    MainController() throws Exception{
-        discovery = new DiscoverySystem();
-        chatController = new ChatSessionController();
-        view = new View();
-
-
+    public MainController() throws IOException {
     }
+
+
     public static void main(String[] args) throws Exception{
+        Scanner myObj = new Scanner(System.in);  // Create a Scanner object
+        System.out.println("Enter username");
+        String username = myObj.nextLine();
+
         MainController app = new MainController();
-        ContactList.getInstance().addContact("achraf","0.0.0.0");
-        ContactList.getInstance().addContact("rach","0.0.1.0");
+        app.view.addObserver(app.chatController.client);
+        app.chatController.addObserver(app.view);
+        app.discovery.tryConnection(username);
 
-//        app.discovery.tryConnection("test");
 
-//        Scanner myObj = new Scanner(System.in);
-//        String elt = "rien";
-//
-//        while (!elt.equals(".")){
-//            elt = myObj.nextLine();
-//            ContactList.getInstance().addContact(elt,elt);
-//        }
 
     }
 
