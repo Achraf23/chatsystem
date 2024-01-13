@@ -2,31 +2,19 @@ package ChatController;
 
 import ContactDiscovery.Contact;
 import ContactDiscovery.ContactList;
+import GUI.View;
 import TCP.TCPClient;
 import TCP.TCPMessage;
 import TCP.TCPServer;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.util.ArrayList;
 
 public class ChatSessionController {
     public TCPServer server;
     public TCPClient client;
     ArrayList<ChatSessionController.Observer> observers;
-
-//    @Override
-//    public void sendMessage(String msg, Contact recipient) {
-//        try {
-//            client.startConnection(recipient.ip(),TCPServer.TCP_Server_Port);
-//            client.sendMessage(new TCPMessage(msg,InetAddress.getLocalHost()));
-//            client.stopConnection();
-//            System.out.println("msg: "+msg);
-//        }catch (IOException e){
-//            System.out.println("sent Message Observer Method error: " + e);
-//        }
-//
-//    }
-
 
 
    public interface Observer {
@@ -38,7 +26,7 @@ public class ChatSessionController {
         server = new TCPServer();
         server.addObserver(msg -> {
             try{
-                storeMessage(msg);
+                storeMessage(msg,ContactList.getInstance().getIpFromContact(msg.origin().getHostAddress()));
                 for (ChatSessionController.Observer obs: observers)
                     obs.receivedMessageFromServer(msg.content(),ContactList.getInstance().getIpFromContact(msg.origin().getHostAddress()));
             }catch (Exception e){
@@ -56,12 +44,12 @@ public class ChatSessionController {
     }
 
 
-    private void storeMessage(TCPMessage msg) throws Exception{
-//        for(ChatSession conversation : conversations){
-//            if(conversation.contact.ip().equals(msg.origin().getHostAddress())){
-//                conversation.addMessage(msg);
-//            }
-//        }
+    public static void storeMessage(TCPMessage msg,Contact contact) throws Exception{
+       DatabaseManager db = DatabaseManager.getInstance();
+       if(msg.origin() == InetAddress.getLocalHost())
+           db.addMessageToDatabase(msg.content(),contact,true);
+       else db.addMessageToDatabase(msg.content(),contact,false);
+
     }
 
 

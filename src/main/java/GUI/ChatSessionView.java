@@ -1,35 +1,36 @@
 package GUI;
 
 import ContactDiscovery.Contact;
-import TCP.TCPClient;
-import TCP.TCPMessage;
-import TCP.TCPServer;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.IOException;
+
 import java.net.InetAddress;
 import java.util.ArrayList;
 
 public class ChatSessionView extends JPanel implements ActionListener {
 
     JPanel conversationPanel;
-    ArrayList<String> messages;
+    ArrayList<Message> messages;
     JTextField textField;
     Contact contact;
     ArrayList<Observer> observers;
 
+
     public interface Observer{
         void sentMessage(String msg,Contact recipient);
+    }
+
+    public record Message(String content, boolean is_me){
     }
 
     ChatSessionView(Contact contact){
         super();
         setLayout(new BorderLayout());
 
-        messages = new ArrayList<String>();
+        messages = new ArrayList<Message>();
 
         this.contact = contact;
 
@@ -64,14 +65,18 @@ public class ChatSessionView extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        addMessageToConversation(textField.getText(),"Me");
+        addMessageToConversation(new Message(textField.getText(),true));
         for(Observer obs : observers)
             obs.sentMessage(textField.getText(),contact);
     }
 
-    public void addMessageToConversation(String msg,String sender){
-        this.messages.add(msg);
-        conversationPanel.add(new JLabel("["+sender+"]: "+msg));
+    public void addMessageToConversation(Message message){
+        this.messages.add(message);
+        if(message.is_me())
+            conversationPanel.add(new JLabel("[Me]:" +message.content()));
+        else
+            conversationPanel.add(new JLabel("["+contact.pseudo()+"]"+message.content()));
+
         this.revalidate();
         this.repaint();
     }

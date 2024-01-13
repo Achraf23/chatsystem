@@ -1,10 +1,14 @@
 package GUI;
 
 import ChatController.ChatSessionController;
+import ChatController.DatabaseManager;
 import ContactDiscovery.Contact;
+import ContactDiscovery.ContactList;
+import TCP.TCPMessage;
 
 import javax.swing.*;
 import java.awt.*;
+import java.net.InetAddress;
 import java.util.ArrayList;
 
 public class View implements ChatSessionController.Observer,ChatSessionView.Observer{
@@ -41,20 +45,22 @@ public class View implements ChatSessionController.Observer,ChatSessionView.Obse
             if(activeConversation!=null)
                 frame.remove(activeConversation);
 
-            //Attempt to get Conversation
+            //Attempt to get Conversation from Array of Conversations
             ChatSessionView conversation = getConversation(contact);
 
             if(conversation == null){
                 //First time talking with a contact
-                ChatSessionView newConversation = new ChatSessionView(contact);
-                addConversation(newConversation);
-//                newConversation.addObserver(this);
-                activeConversation = newConversation;
-//                conversations.add(activeConversation);
-                frame.add(activeConversation);
+                //Retrieve conversation from Database
+                try {
+                    ChatSessionView newConversation = retrieveConversationFromDatabase(contact);
+                    addConversation(newConversation);
+                    activeConversation = newConversation;
+                    frame.add(activeConversation);
+                }catch (Exception e){
+                    System.out.println("Error retrieving conversation From Database:\n"+e);
+                }
 
             }else{
-                //Retrieve stored conversation
                 activeConversation = conversation;
                 frame.add(conversation);
 
@@ -88,19 +94,21 @@ public class View implements ChatSessionController.Observer,ChatSessionView.Obse
         return null;
     }
 
+    ChatSessionView retrieveConversationFromDatabase(Contact contact) throws Exception{
+        ArrayList<ChatSessionView.Message> messages = DatabaseManager.getInstance().retrieveAllMessages(contact);
+        ChatSessionView conversation = new ChatSessionView(contact);
+
+        for(ChatSessionView.Message msg : messages)
+            conversation.addMessageToConversation(msg);
+        return conversation;
+    }
+
     @Override
     public void receivedMessageFromServer(String msg,Contact origin){
         ChatSessionView conversation = getConversation(origin);
         if(conversation != null) {
-            conversation.addMessageToConversation(msg, origin.pseudo());
-        }else{
-            ChatSessionView newConversation = new ChatSessionView(origin);
-            newConversation.addMessageToConversation(msg,origin.pseudo());
-            addConversation(newConversation);
-
+            conversation.addMessageToConversation(new ChatSessionView.Message(msg, false));
         }
-
-
     }
 
     @Override

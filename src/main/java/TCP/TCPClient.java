@@ -1,5 +1,7 @@
 package TCP;
 
+import ChatController.ChatSessionController;
+import ChatController.DatabaseManager;
 import ContactDiscovery.Contact;
 import GUI.ChatSessionView;
 import GUI.View;
@@ -10,6 +12,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.UnknownHostException;
 
 public class TCPClient implements View.Observer{
     private Socket clientSocket;
@@ -32,11 +35,16 @@ public class TCPClient implements View.Observer{
    @Override 
     public void sendMessage(String msg, Contact recipient){
         try {
-            startConnection(recipient.ip(),TCPServer.TCP_Server_Port);
-            sendMessage(new TCPMessage(msg,InetAddress.getLocalHost()));
-            stopConnection();
-        }catch (IOException e){
-            System.out.println("Send message observer error: "+ e);
+
+                TCPMessage tcpMessage = new TCPMessage(msg,InetAddress.getLocalHost());
+                startConnection(recipient.ip(),TCPServer.TCP_Server_Port);
+                sendMessage(tcpMessage);
+                stopConnection();
+
+                ChatSessionController.storeMessage(tcpMessage,recipient);
+
+        }catch (Exception error){
+            System.out.println("Send message observer error: "+ error);
         }
     }
 
