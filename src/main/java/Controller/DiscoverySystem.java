@@ -3,6 +3,7 @@ import ChatController.ChatSessionController;
 import ContactDiscovery.Contact;
 import ContactDiscovery.ContactList;
 import ContactDiscovery.User;
+import GUI.View;
 
 import java.io.IOException;
 import java.util.Scanner;  // Import the Scanner class
@@ -10,7 +11,7 @@ import java.util.Scanner;  // Import the Scanner class
 /** Handles the Users operations regarding the server
  *
  */
-public class DiscoverySystem {
+public class DiscoverySystem implements View.Observer {
 
     ClientUDP client;
     EchoServer server;
@@ -67,7 +68,6 @@ public class DiscoverySystem {
      * @throws Exception if sleep failed
      */
     public void logOut() throws Exception{
-        //TODO: Do we interrupt the disconnect if sleep failed?
         client.sendMsgToOthers("disconnect");
         Thread.sleep(100);
         server.interrupt();
@@ -145,5 +145,18 @@ public class DiscoverySystem {
     }
 
 
+    @Override
+    public void sendMessage(String msg, Contact recipient) {
 
+    }
+
+    @Override
+    public void changeUsername(String username) {
+        try {
+            System.out.println("observer discovery method");
+            changePseudo(username);
+        }catch (IOException e){
+            System.out.println("Change pseudo error: " + e);
+        }
+    }
 }

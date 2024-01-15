@@ -4,40 +4,71 @@ import ChatController.ChatSessionController;
 import ChatController.DatabaseManager;
 import ContactDiscovery.Contact;
 import ContactDiscovery.ContactList;
+import Controller.DiscoverySystem;
 import TCP.TCPMessage;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.net.InetAddress;
 import java.util.ArrayList;
 
-public class View implements ChatSessionController.Observer,ChatSessionView.Observer{
+public class View implements ChatSessionController.Observer,ChatSessionView.Observer {
     JFrame frame;
-    public ContactView contactView;
+    ContactView contactView;
     ChatSessionView activeConversation;
     ArrayList<ChatSessionView> conversations;
     static final int width_frame = 500;
     static final int height_frame = 300;
 
-    final ArrayList<View.Observer> observers = new ArrayList<View.Observer>();
+    ArrayList<View.Observer> observers = new ArrayList<View.Observer>();
+
 
     public interface Observer {
         void sendMessage(String msg, Contact recipient);
+        void changeUsername(String username);
     }
 
-    public View() {
+    public View(String username) {
         frame = new JFrame("Chat System");
         frame.setSize(width_frame,height_frame);
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
 
+
+
+        UsernamePanel usernamePanel = new UsernamePanel(username);
+        usernamePanel.createIconButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Show a dialog to get user input (blocking instruction)
+                String userInput = JOptionPane.showInputDialog("Change Username:");
+                if(userInput != null){
+                    usernamePanel.setUsername(userInput);
+                    for(Observer observer : observers)
+                        observer.changeUsername(userInput);
+
+                }
+
+            }
+        });
+
         contactView = new ContactView();
-        frame.add(contactView, BorderLayout.WEST);
+
+        JPanel discovery = new JPanel(new BorderLayout());
+        discovery.add(usernamePanel,BorderLayout.NORTH);
+//        pseudo.add(Box.createRigidArea(new Dimension(0, 10)));
+        discovery.add(contactView,BorderLayout.CENTER);
+
+        frame.add(discovery,BorderLayout.WEST);
 
         frame.setVisible(true);
 
         conversations = new ArrayList<ChatSessionView>();
+        observers = new ArrayList<Observer>();
 
 
         //Observes ContactView
@@ -66,15 +97,22 @@ public class View implements ChatSessionController.Observer,ChatSessionView.Obse
 
             }
 
-
             frame.revalidate();
             frame.repaint();
+
+
         });
+
+
 
 
     }
 
-    public synchronized void addObserver(View.Observer obs){
+    public static void main(String[] args) throws Exception {
+        View v = new View("test");
+    }
+
+        public synchronized void addObserver(View.Observer obs){
         this.observers.add(obs);
     }
 

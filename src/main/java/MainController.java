@@ -13,7 +13,7 @@ import java.util.Scanner;
 public class MainController {
     final DiscoverySystem discovery = new DiscoverySystem();
     final ChatSessionController chatController = new ChatSessionController();
-    final View view = new View();
+    View view ;
 
     public MainController() throws IOException {
     }
@@ -24,9 +24,16 @@ public class MainController {
         System.out.println("Enter username");
         String username = myObj.nextLine();
 
+        //Initialize instances
         MainController app = new MainController();
-        app.view.addObserver(app.chatController.client);
+        app.view = new View(username);
+
+        //Add observers
         app.chatController.addObserver(app.view);
+        app.view.addObserver(app.chatController.client);
+        app.view.addObserver(app.discovery);
+
+        //Try connection
         app.discovery.tryConnection(username);
 
 

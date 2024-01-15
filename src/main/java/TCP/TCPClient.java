@@ -48,4 +48,9 @@ public class TCPClient implements View.Observer{
         }
     }
 
+    @Override
+    public void changeUsername(String username) {
+
+    }
+
 }
