@@ -148,7 +148,7 @@ public class View implements LoginView.Observer,ChatSessionController.Observer,C
         return null;
     }
 
-    ChatSessionView retrieveConversationFromDatabase(Contact contact) throws Exception{
+    private ChatSessionView retrieveConversationFromDatabase(Contact contact) throws Exception{
         ArrayList<ChatSessionView.Message> messages = DatabaseManager.getInstance().retrieveAllMessages(contact);
         ChatSessionView conversation = new ChatSessionView(contact);
 

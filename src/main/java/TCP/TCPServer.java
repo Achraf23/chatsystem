@@ -29,9 +29,9 @@ public class TCPServer {
         this.observers = new ArrayList<Observer>();
     }
 
-    public void start() throws IOException{
+    public void start(int port) throws IOException{
 
-        serverSocket = new ServerSocket(TCP_Server_Port);
+        serverSocket = new ServerSocket(port);
         Thread server= new Thread(){
             public void run(){
 

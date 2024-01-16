@@ -1,18 +1,13 @@
 package TCP;
 
-import ContactDiscovery.Contact;
-import ContactDiscovery.ContactList;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TCPTests {
 
@@ -21,17 +16,18 @@ public class TCPTests {
 
         TCPClient client = new TCPClient();
         TCPServer server = new TCPServer();
+        int port = 6666;
 
         List<String> testMessages = Arrays.asList("alice", "bob", "chloe",  "éàç");
 
         List<String> receivedMessages = new ArrayList<>();
-        server.start();
+        server.start(port);
 
         server.addObserver(msg -> receivedMessages.add(msg.content()));
 
 
 
-        client.startConnection("127.0.0.1",TCPServer.TCP_Server_Port);
+        client.startConnection("127.0.0.1",port);
         for (String msg : testMessages) {
             client.sendMessage(new TCPMessage(msg,InetAddress.getLocalHost()));
         }
@@ -39,7 +35,6 @@ public class TCPTests {
         Thread.sleep(100);
 
         client.stopConnection();
-        server.stop();
 
 
         assertEquals(testMessages.size(), receivedMessages.size());
@@ -50,17 +45,21 @@ public class TCPTests {
     void originIpTestMessage() throws Exception{
         TCPClient client = new TCPClient();
         TCPServer server = new TCPServer();
+        int port = 8888;
 
-        server.start();
-        List<InetAddress> addressMsg = new ArrayList<InetAddress>();
+        server.start(port);
+        List<InetAddress> addressMsg = new ArrayList<>();
+
+
         server.addObserver(msg -> addressMsg.add(msg.origin()));
-        client.startConnection("127.0.0.1",TCPServer.TCP_Server_Port);
+
+        client.startConnection("127.0.0.1",port);
         client.sendMessage(new TCPMessage("test",InetAddress.getLocalHost()));
 
-        Thread.sleep(100);
 
-        server.stop();
         client.stopConnection();
+
+        Thread.sleep(100);
 
         assertEquals(InetAddress.getLocalHost(),addressMsg.get(0));
     }

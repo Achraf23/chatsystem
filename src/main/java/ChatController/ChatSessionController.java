@@ -36,7 +36,7 @@ public class ChatSessionController {
 
         observers = new ArrayList<Observer>();
 
-        server.start();
+        server.start(TCPServer.TCP_Server_Port);
     }
 
     public synchronized void addObserver(ChatSessionController.Observer obs){

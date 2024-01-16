@@ -12,14 +12,6 @@ public class DatabaseManager {
     private static final String TABLE_NAME = "Message";
 
 
-    public static void main(String[] args) throws Exception{
-        DatabaseManager db = DatabaseManager.getInstance();
-
-//        db.printAllMessages(new Contact("pseudo","1.1.1.1"));
-
-
-    }
-
 
     // private constructor
     private DatabaseManager() throws Exception
@@ -74,19 +66,21 @@ public class DatabaseManager {
         return messages;
     }
 
-    //FOR DEBUGGING
-//    public void printAllMessages(Contact contact) throws SQLException{
-//        ArrayList<String> messages = retrieveAllMessages(contact);
-//
-//        if (messages.isEmpty()) {
-//            System.out.println("No messages found in the database.");
-//        } else {
-//            System.out.println("List of Messages:");
-//            for (String message : messages) {
-//                System.out.println(message);
-//            }
-//        }
-//    }
+    public void deleteMessagesByIp(Contact contact) {
+        try (Connection connection = getConnection()) {
+            String sql = "DELETE FROM Message WHERE ip_contact = ?";
+
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+                preparedStatement.setString(1, contact.ip());
+
+                int affectedRows = preparedStatement.executeUpdate();
+                System.out.println("Deleted rows: " + affectedRows);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public static void createTableIfNotExists() throws Exception{
         Connection conn = null;
@@ -102,12 +96,13 @@ public class DatabaseManager {
         ResultSet rs = conn.getMetaData().getTables(null, null, TABLE_NAME, null);
         if (!rs.next()) { // Table does not exist
             // Create the table
-            String sql = "CREATE TABLE " + TABLE_NAME + " (" +
-                    "id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                    "ip_contact VARCHAR(255)," +
-                    "envoye BOOLEAN," +
-                    "stringMessage TEXT" +
-                    ")";
+            String sql = "CREATE TABLE Message (" +
+                    "    id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    "    ip_contact VARCHAR(255)," +
+                    "    envoye BOOLEAN," +
+                    "    stringMessage TEXT," +
+                    "    time TIMESTAMP DEFAULT CURRENT_TIMESTAMP" +
+                    ");";
             stmt.executeUpdate(sql);
             System.out.println("Table '" + TABLE_NAME + "' created successfully.");
         } else {

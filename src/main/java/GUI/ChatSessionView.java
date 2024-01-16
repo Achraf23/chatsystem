@@ -75,7 +75,7 @@ public class ChatSessionView extends JPanel implements ActionListener {
         if(message.is_me())
             conversationPanel.add(new JLabel("[Me]:" +message.content()));
         else
-            conversationPanel.add(new JLabel("["+contact.pseudo()+"]"+message.content()));
+            conversationPanel.add(new JLabel("["+contact.pseudo()+"]:"+message.content()));
 
         this.revalidate();
         this.repaint();
