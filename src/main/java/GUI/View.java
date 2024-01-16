@@ -3,21 +3,16 @@ package GUI;
 import ChatController.ChatSessionController;
 import ChatController.DatabaseManager;
 import ContactDiscovery.Contact;
-import ContactDiscovery.ContactList;
-import Controller.DiscoverySystem;
-import TCP.TCPMessage;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.net.InetAddress;
+import java.awt.event.*;
 import java.util.ArrayList;
 
-public class View implements ChatSessionController.Observer,ChatSessionView.Observer {
+public class View implements LoginView.Observer,ChatSessionController.Observer,ChatSessionView.Observer {
     JFrame frame;
     ContactView contactView;
+    LoginView loginView;
     ChatSessionView activeConversation;
     ArrayList<ChatSessionView> conversations;
     static final int width_frame = 500;
@@ -29,47 +24,32 @@ public class View implements ChatSessionController.Observer,ChatSessionView.Obse
     public interface Observer {
         void sendMessage(String msg, Contact recipient);
         void changeUsername(String username);
+        void tryConnecting(String username);
+        void disconnect();
     }
 
-    public View(String username) {
+    public static void showWarningDialog() {
+        JOptionPane.showMessageDialog(null, "Username exists already !", "Warning", JOptionPane.WARNING_MESSAGE);
+    }
+
+    public View() {
+        //Frame settings
         frame = new JFrame("Chat System");
         frame.setSize(width_frame,height_frame);
-
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        WindowListener l = new WindowAdapter() {
+            public void windowClosing(WindowEvent e){
+                for(Observer observer : observers)
+                    observer.disconnect();
+            }
+        };
+        frame.addWindowListener(l);
         frame.setLocationRelativeTo(null);
 
-
-
-        UsernamePanel usernamePanel = new UsernamePanel(username);
-        usernamePanel.createIconButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Show a dialog to get user input (blocking instruction)
-                String userInput = JOptionPane.showInputDialog("Change Username:");
-                if(userInput != null){
-                    usernamePanel.setUsername(userInput);
-                    for(Observer observer : observers)
-                        observer.changeUsername(userInput);
-
-                }
-
-            }
-        });
-
-        contactView = new ContactView();
-
-        JPanel discovery = new JPanel(new BorderLayout());
-        discovery.add(usernamePanel,BorderLayout.NORTH);
-//        pseudo.add(Box.createRigidArea(new Dimension(0, 10)));
-        discovery.add(contactView,BorderLayout.CENTER);
-
-        frame.add(discovery,BorderLayout.WEST);
-
-        frame.setVisible(true);
-
+        //Init view components
         conversations = new ArrayList<ChatSessionView>();
         observers = new ArrayList<Observer>();
-
+        contactView = new ContactView();
 
         //Observes ContactView
         contactView.addObserver(contact -> {
@@ -100,19 +80,55 @@ public class View implements ChatSessionController.Observer,ChatSessionView.Obse
             frame.revalidate();
             frame.repaint();
 
+        });
 
+        loginView = new LoginView();
+        loginView.addObserver(this);
+        frame.add(loginView);
+
+        frame.setVisible(true);
+
+
+    }
+
+    public void initChatSession(String username){
+        //Remove loginView
+        frame.remove(loginView);
+
+        UsernamePanel usernamePanel = new UsernamePanel(username);
+        usernamePanel.createIconButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Show a dialog to get user input (blocking instruction)
+                String userInput = JOptionPane.showInputDialog("Change Username:");
+                if(userInput != null){
+                    usernamePanel.setUsername(userInput);
+                    for(Observer observer : observers)
+                        observer.changeUsername(userInput);
+
+                }
+
+            }
         });
 
 
+        //Discovery Panel (Contact view and username) positioned at the left of the frame
+        JPanel discovery = new JPanel(new BorderLayout());
+        discovery.add(usernamePanel,BorderLayout.NORTH);
+        discovery.add(contactView,BorderLayout.CENTER);
 
+        frame.add(discovery,BorderLayout.WEST);
+
+        frame.revalidate();
+        frame.repaint();
 
     }
 
     public static void main(String[] args) throws Exception {
-        View v = new View("test");
+        View v = new View();
     }
 
-        public synchronized void addObserver(View.Observer obs){
+    public synchronized void addObserver(View.Observer obs){
         this.observers.add(obs);
     }
 
@@ -153,6 +169,13 @@ public class View implements ChatSessionController.Observer,ChatSessionView.Obse
     public void sentMessage(String msg, Contact recipient) {
         for (Observer obs : observers)
             obs.sendMessage(msg,recipient);
+
+    }
+
+    @Override
+    public void connectClicked(String username) {
+        for(Observer observer : observers)
+            observer.tryConnecting(username);
 
     }
 

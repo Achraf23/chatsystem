@@ -15,6 +15,7 @@ public class DiscoverySystem implements View.Observer {
 
     ClientUDP client;
     EchoServer server;
+    public boolean connected = false;
 
     /** ConnectionController Constructor
      *
@@ -22,7 +23,6 @@ public class DiscoverySystem implements View.Observer {
      */
     public DiscoverySystem() throws IOException{
         client = new ClientUDP();
-        server = new EchoServer();
 
     }
 
@@ -34,7 +34,7 @@ public class DiscoverySystem implements View.Observer {
      */
     public void tryConnection(String nickname) throws IOException {
 
-
+        server = new EchoServer();
         server.start(); ///launch server to listen to other users
         client.broadcastConnection("Hello"); //send broadcast to retrieve connected users nickname
 
@@ -49,6 +49,7 @@ public class DiscoverySystem implements View.Observer {
 
         if(ContactList.getInstance().isUnique(nickname)){
             User.getInstance().nickname = nickname;
+            connected = true;
         }else{
             server.interrupt();
             throw new IOException("Connection Failed");
@@ -91,8 +92,10 @@ public class DiscoverySystem implements View.Observer {
         try {
             c.tryConnection(username);
         }catch (IOException e){
+            c.logOut();
             System.out.println("Try another pseudonym");
-            throw e;
+//            c.server = new EchoServer();
+            c.tryConnection("2");
         }
 
         String choice;
@@ -159,4 +162,15 @@ public class DiscoverySystem implements View.Observer {
             System.out.println("Change pseudo error: " + e);
         }
     }
+
+    @Override
+    public void tryConnecting(String username) {
+
+    }
+
+    @Override
+    public void disconnect() {
+
+    }
+
 }

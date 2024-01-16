@@ -53,4 +53,15 @@ public class TCPClient implements View.Observer{
 
     }
 
+    @Override
+    public void tryConnecting(String username) {
+
+    }
+
+    @Override
+    public void disconnect() {
+
+    }
+
+
 }
