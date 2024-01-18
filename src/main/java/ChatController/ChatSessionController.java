@@ -2,8 +2,6 @@ package ChatController;
 
 import ContactDiscovery.Contact;
 import ContactDiscovery.ContactList;
-import GUI.View;
-import TCP.TCPClient;
 import TCP.TCPMessage;
 import TCP.TCPServer;
 
@@ -13,7 +11,6 @@ import java.util.ArrayList;
 
 public class ChatSessionController {
     public TCPServer server;
-    public TCPClient client;
     ArrayList<ChatSessionController.Observer> observers;
 
 
@@ -22,7 +19,6 @@ public class ChatSessionController {
    }
 
     public ChatSessionController() throws IOException{
-        client = new TCPClient();
         server = new TCPServer();
         server.addObserver(msg -> {
             try{
@@ -46,9 +42,7 @@ public class ChatSessionController {
 
     public static void storeMessage(TCPMessage msg,Contact contact) throws Exception{
        DatabaseManager db = DatabaseManager.getInstance();
-       if(msg.origin() == InetAddress.getLocalHost())
-           db.addMessageToDatabase(msg.content(),contact,true);
-       else db.addMessageToDatabase(msg.content(),contact,false);
+       db.addMessageToDatabase(msg.content(),contact, msg.origin() == InetAddress.getLocalHost());
 
     }
 

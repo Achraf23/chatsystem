@@ -5,11 +5,12 @@ import Controller.DiscoverySystem;
 import GUI.ChatSessionView;
 import GUI.ContactView;
 import GUI.View;
+import TCP.TCPClient;
 
 import java.io.IOException;
 
 
-public class MainController implements View.Observer {
+public class MainController implements View.MainObserver {
     final DiscoverySystem discovery = new DiscoverySystem();
     final ChatSessionController chatController = new ChatSessionController();
     View view ;
@@ -22,12 +23,13 @@ public class MainController implements View.Observer {
 
         //Initialize instances
         MainController app = new MainController();
+        TCPClient tcpSender = new TCPClient();
         app.view = new View();
-        app.view.addObserver(app);
+        app.view.addMainObserver(app);
 
         //Add observers
         app.chatController.addObserver(app.view);
-        app.view.addObserver(app.chatController.client);
+        app.view.addObserver(tcpSender);
         app.view.addObserver(app.discovery);
 
     }
@@ -57,14 +59,5 @@ public class MainController implements View.Observer {
         }
     }
 
-    @Override
-    public void sendMessage(String msg, Contact recipient) {
-
-    }
-
-    @Override
-    public void changeUsername(String username) {
-
-    }
 
 }

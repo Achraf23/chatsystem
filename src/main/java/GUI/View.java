@@ -15,15 +15,18 @@ public class View implements LoginView.Observer,ChatSessionController.Observer,C
     LoginView loginView;
     ChatSessionView activeConversation;
     ArrayList<ChatSessionView> conversations;
+    ArrayList<View.Observer> observers = new ArrayList<View.Observer>();
+    MainObserver mainObserver;
     static final int width_frame = 500;
     static final int height_frame = 300;
-
-    ArrayList<View.Observer> observers = new ArrayList<View.Observer>();
-
 
     public interface Observer {
         void sendMessage(String msg, Contact recipient);
         void changeUsername(String username);
+
+    }
+
+    public interface MainObserver{
         void tryConnecting(String username);
         void disconnect();
     }
@@ -39,8 +42,7 @@ public class View implements LoginView.Observer,ChatSessionController.Observer,C
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         WindowListener l = new WindowAdapter() {
             public void windowClosing(WindowEvent e){
-                for(Observer observer : observers)
-                    observer.disconnect();
+                mainObserver.disconnect();
             }
         };
         frame.addWindowListener(l);
@@ -124,16 +126,14 @@ public class View implements LoginView.Observer,ChatSessionController.Observer,C
 
     }
 
-    public static void main(String[] args) throws Exception {
-        View v = new View();
-    }
 
     public synchronized void addObserver(View.Observer obs){
         this.observers.add(obs);
     }
+    public synchronized void addMainObserver(MainObserver obs){mainObserver = obs;}
 
 
-    void addConversation(ChatSessionView conversation){
+    private void addConversation(ChatSessionView conversation){
         conversation.addObserver(this);
         conversations.add(conversation);
     }
@@ -160,9 +160,9 @@ public class View implements LoginView.Observer,ChatSessionController.Observer,C
     @Override
     public void receivedMessageFromServer(String msg,Contact origin){
         ChatSessionView conversation = getConversation(origin);
-        if(conversation != null) {
+        if(conversation != null)
             conversation.addMessageToConversation(new ChatSessionView.Message(msg, false));
-        }
+
     }
 
     @Override
@@ -173,11 +173,7 @@ public class View implements LoginView.Observer,ChatSessionController.Observer,C
     }
 
     @Override
-    public void connectClicked(String username) {
-        for(Observer observer : observers)
-            observer.tryConnecting(username);
-
-    }
+    public void connectClicked(String username) {mainObserver.tryConnecting(username);}
 
 
 }

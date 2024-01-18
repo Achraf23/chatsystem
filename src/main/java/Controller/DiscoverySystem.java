@@ -98,14 +98,5 @@ public class DiscoverySystem implements View.Observer {
         }
     }
 
-    @Override
-    public void tryConnecting(String username) {
-
-    }
-
-    @Override
-    public void disconnect() {
-
-    }
 
 }
