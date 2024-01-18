@@ -7,7 +7,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import java.net.InetAddress;
 import java.util.ArrayList;
 
 public class ChatSessionView extends JPanel implements ActionListener {
@@ -55,7 +54,9 @@ public class ChatSessionView extends JPanel implements ActionListener {
         bottom.setBorder(BorderFactory.createEmptyBorder(5,10,5,10));
 
         this.add(bottom,BorderLayout.SOUTH);
-        this.add(conversationPanel);
+
+        JScrollPane finalConversation = new JScrollPane(conversationPanel);
+        this.add(finalConversation);
 
         observers = new ArrayList<ChatSessionView.Observer>();
 

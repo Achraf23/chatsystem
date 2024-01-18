@@ -15,6 +15,7 @@ public class UsernamePanel extends JPanel {
         //Panel containing username label
         JPanel usernamePanel = new JPanel();
         nickname = new JLabel(username);
+        nickname.setForeground(new Color( 	0, 0, 139));
         usernamePanel.add(nickname);
 
         JPanel buttonPanel = new JPanel();

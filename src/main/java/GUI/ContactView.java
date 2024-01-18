@@ -13,6 +13,7 @@ public class ContactView extends JPanel implements ContactList.Observer, ActionL
 
     public interface Observer{
         void contactClicked(Contact contact);
+        void changeConversationUsername(Contact contact);
     }
 
     ArrayList<ContactView.Observer> observers;
@@ -52,7 +53,9 @@ public class ContactView extends JPanel implements ContactList.Observer, ActionL
     @Override
     public void newContact(Contact contact) {
         updateContactPanel();
-    } // Works also for changing pseudo because and we remove the contact and add a new one
+        for(Observer observer : observers)
+            observer.changeConversationUsername(contact);
+    } // Works also for changing pseudo because we remove the contact and add a new one
 
     @Override
     public void contactRemoved() {

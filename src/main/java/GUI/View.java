@@ -9,7 +9,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 
-public class View implements LoginView.Observer,ChatSessionController.Observer,ChatSessionView.Observer {
+public class View implements ContactView.Observer,LoginView.Observer,ChatSessionController.Observer,ChatSessionView.Observer {
     JFrame frame;
     ContactView contactView;
     LoginView loginView;
@@ -19,6 +19,8 @@ public class View implements LoginView.Observer,ChatSessionController.Observer,C
     MainObserver mainObserver;
     static final int width_frame = 500;
     static final int height_frame = 300;
+
+
 
     public interface Observer {
         void sendMessage(String msg, Contact recipient);
@@ -54,35 +56,7 @@ public class View implements LoginView.Observer,ChatSessionController.Observer,C
         contactView = new ContactView();
 
         //Observes ContactView
-        contactView.addObserver(contact -> {
-            if(activeConversation!=null)
-                frame.remove(activeConversation);
-
-            //Attempt to get Conversation from Array of Conversations
-            ChatSessionView conversation = getConversation(contact);
-
-            if(conversation == null){
-                //First time talking with a contact
-                //Retrieve conversation from Database
-                try {
-                    ChatSessionView newConversation = retrieveConversationFromDatabase(contact);
-                    addConversation(newConversation);
-                    activeConversation = newConversation;
-                    frame.add(activeConversation);
-                }catch (Exception e){
-                    System.out.println("Error retrieving conversation From Database:\n"+e);
-                }
-
-            }else{
-                activeConversation = conversation;
-                frame.add(conversation);
-
-            }
-
-            frame.revalidate();
-            frame.repaint();
-
-        });
+        contactView.addObserver(this);
 
         loginView = new LoginView();
         loginView.addObserver(this);
@@ -155,6 +129,43 @@ public class View implements LoginView.Observer,ChatSessionController.Observer,C
         for(ChatSessionView.Message msg : messages)
             conversation.addMessageToConversation(msg);
         return conversation;
+    }
+
+    @Override
+    public void contactClicked(Contact contact) {
+        if(activeConversation!=null)
+            frame.remove(activeConversation);
+
+        //Attempt to get Conversation from Array of Conversations
+        ChatSessionView conversation = getConversation(contact);
+
+        if(conversation == null){
+            //First time talking with a contact
+            //Retrieve conversation from Database
+            try {
+                ChatSessionView newConversation = retrieveConversationFromDatabase(contact);
+                addConversation(newConversation);
+                activeConversation = newConversation;
+                frame.add(activeConversation);
+            }catch (Exception e){
+                System.out.println("Error retrieving conversation From Database:\n"+e);
+            }
+
+        }else{
+            activeConversation = conversation;
+            frame.add(conversation);
+
+        }
+
+        frame.revalidate();
+        frame.repaint();
+    }
+
+    @Override
+    public void changeConversationUsername(Contact contact) {
+        ChatSessionView conversation = getConversation(contact);
+        if(conversation!=null)
+            conversation.contact = contact;
     }
 
     @Override
