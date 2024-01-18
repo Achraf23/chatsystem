@@ -13,7 +13,7 @@ public class ContactList {
 
     public interface Observer{
         void newContact(Contact contact);
-        void contactRemoved();
+        void contactRemoved(Contact contact);
     }
     ArrayList<Observer> observers;
 
@@ -74,14 +74,15 @@ public class ContactList {
         ArrayList<Contact> table = ContactList.getInstance().table;
         for(int i=0;i<table.size();i++){
             if(table.get(i).ip().equals(ip)){
+                Contact contact = new Contact(table.get(i).pseudo(),table.get(i).ip());
                 table.remove(i);
+                for(Observer obs:observers ){
+                    obs.contactRemoved(contact);
+                }
+
                 res = true;
                 break;
             }
-        }
-
-        for(Observer obs:observers ){
-            obs.contactRemoved();
         }
 
         return res;

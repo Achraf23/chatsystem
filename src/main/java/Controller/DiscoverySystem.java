@@ -21,7 +21,7 @@ public class DiscoverySystem implements View.Observer {
      *
      * @throws IOException
      */
-    public DiscoverySystem() throws IOException{
+    public DiscoverySystem() {
         client = new ClientUDP();
 
     }

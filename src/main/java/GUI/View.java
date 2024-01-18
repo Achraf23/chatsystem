@@ -169,6 +169,20 @@ public class View implements ContactView.Observer,LoginView.Observer,ChatSession
     }
 
     @Override
+    public void endConversation(Contact contact) {
+        ChatSessionView conversation = getConversation(contact);
+        if(conversation == activeConversation){
+            frame.remove(activeConversation);
+            frame.repaint();
+            frame.revalidate();
+        }else {
+            if(conversation != null)
+                conversations.remove(conversation);
+        }
+
+    }
+
+    @Override
     public void receivedMessageFromServer(String msg,Contact origin){
         ChatSessionView conversation = getConversation(origin);
         if(conversation != null)
