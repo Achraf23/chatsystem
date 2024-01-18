@@ -37,7 +37,7 @@ public class ContactView extends JPanel implements ContactList.Observer, ActionL
 
     void updateContactPanel(){
         removeAll();
-        ArrayList<Contact> contactList = ContactList.getInstance().table;
+        ArrayList<Contact> contactList = ContactList.getInstance().getTable();
         for(Contact contact : contactList){
             CustomizedButton btn = new CustomizedButton(contact);
             btn.addActionListener(this);

@@ -38,7 +38,7 @@ class ClientUDP {
      * @param msg the message to transmit
      */
     public void sendMsgToOthers(String msg) {
-        ArrayList<Contact> table= ContactList.getInstance().table;
+        ArrayList<Contact> table= ContactList.getInstance().getTable();
         try{
             socket = new DatagramSocket();
 

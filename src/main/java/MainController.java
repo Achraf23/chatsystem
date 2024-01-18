@@ -5,12 +5,9 @@ import Controller.DiscoverySystem;
 import GUI.ChatSessionView;
 import GUI.ContactView;
 import GUI.View;
-import TCP.TCPMessage;
 
 import java.io.IOException;
-import java.net.InetAddress;
-import java.util.Scanner;
-import java.util.Set;
+
 
 public class MainController implements View.Observer {
     final DiscoverySystem discovery = new DiscoverySystem();

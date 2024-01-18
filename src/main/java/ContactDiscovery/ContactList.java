@@ -9,7 +9,7 @@ import java.util.ArrayList;
 public class ContactList {
 
     private static ContactList contactList = null;
-    public ArrayList<Contact> table;
+    private ArrayList<Contact> table;
 
     public interface Observer{
         void newContact(Contact contact);
@@ -97,6 +97,8 @@ public class ContactList {
         }
         return null;
     }
+
+    public ArrayList<Contact> getTable(){return table;}
 
 
 }

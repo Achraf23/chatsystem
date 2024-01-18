@@ -57,7 +57,7 @@ public class DiscoverySystem implements View.Observer {
 
         System.out.println("nickname="+User.getInstance().nickname+"\n");
         // send my pseudo only if there are other users connected
-        if(!ContactList.getInstance().table.isEmpty())
+        if(!ContactList.getInstance().getTable().isEmpty())
             client.sendMsgToOthers(User.getInstance().nickname);
         else System.out.println("I'm the only one\n");
 
@@ -80,71 +80,6 @@ public class DiscoverySystem implements View.Observer {
             System.out.println("nickname= "+pseudo+"\n");
             client.sendMsgToOthers(pseudo);
         }else throw new IOException("Pseudo already taken");
-    }
-
-    public static void main(String[] args) throws Exception {
-
-        Scanner myObj = new Scanner(System.in);  // Create a Scanner object
-        System.out.println("Enter username");
-        String username = myObj.nextLine();
-
-        DiscoverySystem c = new DiscoverySystem();
-        try {
-            c.tryConnection(username);
-        }catch (IOException e){
-            c.logOut();
-            System.out.println("Try another pseudonym");
-//            c.server = new EchoServer();
-            c.tryConnection("2");
-        }
-
-        String choice;
-//        ChatSessionController controller = new ChatSessionController();
-
-
-        do{
-            System.out.println("1.Change Pseudo");
-            System.out.println("2.Log Out and Quit");
-            System.out.println("3.Display Contact List");
-
-            choice=myObj.nextLine();
-            switch (choice){
-                case "1":
-                    System.out.println("Enter username");
-                    username = myObj.nextLine();
-                    try {
-                        c.changePseudo(username);
-                    }catch (IOException e){
-                        System.out.println("User alreay taken");
-                    }
-                    break;
-
-                case "2":
-                    c.logOut();
-                    System.out.println("quit");
-                    break;
-                case "3":
-                    if(ContactList.getInstance().table.isEmpty())
-                        System.out.println("Liste vide\n");
-                    else{
-                        System.out.println("****debut liste****\n");
-                        for(int i=0;i<ContactList.getInstance().table.size();i++){
-                            System.out.println(ContactList.getInstance().table.get(i).pseudo());
-                        }
-                        System.out.println("****fin liste****\n");
-                    }
-
-                    break;
-
-                default:
-                    System.out.println("Pas compris");
-                    break;
-            }
-
-
-        }while (!choice.equals("2"));
-
-
     }
 
 

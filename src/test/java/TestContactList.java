@@ -1,32 +1,25 @@
 
 import ContactDiscovery.ContactList;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TestContactList {
 
-    private int uniqueElement(String pseudo){
-        int count=0;
-        for(int i=0;i<ContactList.getInstance().table.size();i++){
-            if(pseudo.equals(ContactList.getInstance().table.get(i).pseudo())){
-                count++;
-            }
-        }
-        return count;
-    }
 
     @Test
-    void testContactListValid(){
-        for(int i=0;i<ContactList.getInstance().table.size();i++){
-            assertEquals(1,uniqueElement(ContactList.getInstance().table.get(i).pseudo()));
-        }
+    void isUniqueTest(){
+        String pseudo = "toto";
+        ContactList.getInstance().addContact(pseudo,"0.0.0.0");
+        ContactList.getInstance().addContact(pseudo,"0.0.0.0");
+        assertFalse(ContactList.getInstance().isUnique(pseudo));
     }
 
     @Test
     void testAddContactList(){
-        int sizeList=ContactList.getInstance().table.size();
+        int sizeList=ContactList.getInstance().getTable().size();
         ContactList.getInstance().addContact("pseudo","test");
-        assertEquals(sizeList+1,ContactList.getInstance().table.size());
+        assertEquals(sizeList+1,ContactList.getInstance().getTable().size());
     }
 
 
