@@ -1,9 +1,5 @@
 import ChatController.ChatSessionController;
-import ContactDiscovery.Contact;
-import ContactDiscovery.ContactList;
-import Controller.DiscoverySystem;
-import GUI.ChatSessionView;
-import GUI.ContactView;
+import ControllerDiscovery.DiscoverySystem;
 import GUI.View;
 import TCP.TCPClient;
 

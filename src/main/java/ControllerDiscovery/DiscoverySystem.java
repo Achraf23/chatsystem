@@ -1,12 +1,10 @@
-package Controller;
-import ChatController.ChatSessionController;
+package ControllerDiscovery;
 import ContactDiscovery.Contact;
 import ContactDiscovery.ContactList;
 import ContactDiscovery.User;
 import GUI.View;
 
 import java.io.IOException;
-import java.util.Scanner;  // Import the Scanner class
 
 /** Handles the Users operations regarding the server
  *

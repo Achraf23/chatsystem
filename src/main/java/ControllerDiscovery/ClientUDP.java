@@ -1,4 +1,4 @@
-package Controller;
+package ControllerDiscovery;
 import ContactDiscovery.ContactList;
 import ContactDiscovery.Contact;
 

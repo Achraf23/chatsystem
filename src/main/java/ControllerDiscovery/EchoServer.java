@@ -1,11 +1,9 @@
-package Controller;
+package ControllerDiscovery;
 import ContactDiscovery.ContactList;
-import ContactDiscovery.Contact;
 import ContactDiscovery.User;
 
 import java.net.*;
 import java.io.*;
-import java.util.ArrayList;
 
 /** Thread that listens to the message received by the client from others clients
  *

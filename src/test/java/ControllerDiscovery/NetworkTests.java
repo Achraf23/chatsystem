@@ -1,7 +1,5 @@
-package Controller;
+package ControllerDiscovery;
 
-import ContactDiscovery.ContactList;
-import ContactDiscovery.Contact;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
