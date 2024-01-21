@@ -56,7 +56,7 @@ public class DiscoverySystem implements View.Observer {
         System.out.println("nickname="+User.getInstance().nickname+"\n");
         // send my pseudo only if there are other users connected
         if(!ContactList.getInstance().getTable().isEmpty())
-            client.sendMsgToOthers(User.getInstance().nickname);
+            client.sendMsgToAll(User.getInstance().nickname);
         else System.out.println("I'm the only one\n");
 
 
@@ -67,7 +67,7 @@ public class DiscoverySystem implements View.Observer {
      * @throws Exception if sleep failed
      */
     public void logOut() throws Exception{
-        client.sendMsgToOthers("disconnect");
+        client.sendMsgToAll("disconnect");
         Thread.sleep(100);
         server.interrupt();
     }
@@ -76,7 +76,7 @@ public class DiscoverySystem implements View.Observer {
         if(ContactList.getInstance().isUnique(pseudo)){
             User.getInstance().nickname = pseudo;
             System.out.println("nickname= "+pseudo+"\n");
-            client.sendMsgToOthers(pseudo);
+            client.sendMsgToAll(pseudo);
         }else throw new IOException("Pseudo already taken");
     }
 

@@ -1,13 +1,10 @@
 package ContactDiscovery;
-
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 /** Class that keeps track of the others users that are connected
  *
  */
 public class ContactList {
-
     private static ContactList contactList = null;
     private ArrayList<Contact> table;
 
@@ -43,11 +40,9 @@ public class ContactList {
 
     /** Adds a User through their Pseudo and IP address in the Contact List
      *
-     * @param pseudo The associated pseudo of the user
-     * @param ip The associated IP address of the user
+     * @param contact The associated pseudo of the user
      */
-    public synchronized void addContact(String pseudo,String ip){
-        Contact contact = new Contact(pseudo,ip);
+    public synchronized void addContact(Contact contact){
         table.add(contact);
         for(Observer obs:observers ){
             obs.newContact(contact);

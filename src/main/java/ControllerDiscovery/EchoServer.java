@@ -1,4 +1,5 @@
 package ControllerDiscovery;
+import ContactDiscovery.Contact;
 import ContactDiscovery.ContactList;
 import ContactDiscovery.User;
 
@@ -11,16 +12,9 @@ import java.io.*;
 class EchoServer extends Thread {
 
     private DatagramSocket socket;
-    private boolean running;
     private byte[] buf = new byte[256];
     static final int Server_Port=8080;
 
-    //TODO:
-    /*public static void main(String[] args) throws Exception {
-        EchoServer server = new EchoServer();
-
-
-    }*/
 
     /** EchoServer Constructor
      */
@@ -67,7 +61,6 @@ class EchoServer extends Thread {
         DatagramPacket packet = new DatagramPacket(msg.getBytes(), msg.length(), addrDest, Server_Port);
 
         try {
-//            System.out.println("sending pseudo: "+new String(packet.getData(), StandardCharsets.UTF_8));
             socket.send(packet);
         } catch (IOException e) {
             throw new IOException("socket.send exception");
@@ -75,7 +68,6 @@ class EchoServer extends Thread {
     }
 
     public void run() {
-        //TODO: "Updating conctactList": Send credentials back
 
         while (!this.isInterrupted()) {
             DatagramPacket packet
@@ -95,17 +87,13 @@ class EchoServer extends Thread {
                     InetAddress addressSrc = packet.getAddress();
 
                     if (!isMyMessage(addressSrc)) {
-//                        System.out.println("packet from different host");
 
                         if (received.equals("Hello")) {
-//                            System.out.println("broadcast received");
-
                             //sends pseudo after receiving broadcast
                             String pseudo = User.getInstance().nickname;
                             sendMsg(pseudo,packet.getAddress());
 
                         } else {
-
                             if (received.equals("disconnect")) {
                                 //Disconnection request
                                 System.out.println("received disconnect");
@@ -118,10 +106,10 @@ class EchoServer extends Thread {
                                 if(ContactList.getInstance().removeContact(packet.getAddress().getHostAddress())){
                                         System.out.println("pseudo has changed: "+elt);
                                 }
-                                ContactList.getInstance().addContact(received, packet.getAddress().getHostAddress());
+                                ContactList.getInstance().addContact(new Contact(received, packet.getAddress().getHostAddress()));
                             }
                         }
-                    } //else {System.out.println("received same address "+packet.getAddress().getHostAddress());}
+                    }
                 } catch (IOException i) {
                     System.out.println("stop thread");
                     this.interrupt();

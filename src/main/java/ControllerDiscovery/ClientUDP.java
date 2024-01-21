@@ -12,7 +12,7 @@ import java.util.ArrayList;
 class ClientUDP {
 
     private DatagramSocket socket = null;
-    DatagramPacket outPacket = null;
+    private DatagramPacket outPacket = null;
 
     /** Sends a broadcast to all connected users upon connection
      *
@@ -37,7 +37,7 @@ class ClientUDP {
      *
      * @param msg the message to transmit
      */
-    public void sendMsgToOthers(String msg) {
+    public void sendMsgToAll(String msg) {
         ArrayList<Contact> table= ContactList.getInstance().getTable();
         try{
             socket = new DatagramSocket();

@@ -14,14 +14,19 @@ I used the following technologies to develop my ChatSystem application.
   
   <br>
 * Reasons for using the swing library for the project : 
-  * Easy to use : intuitive handling of the interactions between a frame and a panel.
+  * Easy to use : intuitive handling of the interactions between a frame and panels.
   * Had a previous experience with java swing 
 
 ## Testing Policy
 * Network tests aim to test that TCPClient and TCPServer classes function properly. In other words, we make sure that
 we receive the right messages after sending them with TCPClient to TCPServer
-* Database tests make sure that DatabaseManager functions work properly and that messages are correctly stored 
-* Contact List Tests are very basic
+
+
+* For database management, we need two things, add messages to the database and retrieve them when stating a conversation.
+DatabaseTests makes sure those two functions work correctly.
+
+
+* Contact List Tests are very basic tests like adding and removing elements from the list.
 
 ## Highlights
 I believe that the great part of the code is the loose coupling and the separation between the GUI, the discovery system and

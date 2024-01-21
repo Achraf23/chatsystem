@@ -10,6 +10,7 @@ Upon connection, you can :
 * Chat with other connected users (if any) by clicking on their names
 * Disconnect from the ChatSystem at any time by clicking on the exit button.
 
+<br>
 N.B : <br>
 If you are having a conversation with a connected user, and he suddenly disconnects,
 you won't be able to chat with him anymore (the conversation view will disappear) until his next connection. 
@@ -22,3 +23,4 @@ However, the previous messages will keep the former username.
 
 ## How to execute ChatSystem
     mvn exec:java -Dexec.mainClass="MainController" 
+

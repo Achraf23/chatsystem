@@ -9,12 +9,8 @@ import java.util.Enumeration;
  *
  */
 public class User {
-
-    ContactList contactList;
-    //TODO: Récuperer l'adresse IP par un getter
     private ArrayList<InetAddress> ipAdresses;
     //Pseudo a même à changer
-    //TODO: Will it be pseudo or nickname ?
     public String nickname = null;
     private static User user = null;
 
@@ -24,26 +20,16 @@ public class User {
      * @throws IOException
      */
     private User() throws IOException {
-        //TODO: Get a clean way to get the IP address
-
         ipAdresses = new ArrayList<InetAddress>();
         retrieveIpAdresses();
     }
-
-    //TODO: Main segment
-    public static void main(String[] args) throws Exception {
-
-        System.out.println("test");
-    }
-
 
     /** Get User
      *
      * @return Static instance of User
      * @throws IOException
      */
-    public static synchronized User getInstance () throws IOException
-    {   //TODO: Other synchronized portion?
+    public static synchronized User getInstance () throws IOException {
         if (user == null)
             user = new User();
         return user;
@@ -75,12 +61,6 @@ public class User {
      * @return Ip addresses as an ArrayList
      */
     public ArrayList<InetAddress> getIpAdresses(){return ipAdresses;}
-
-
-
-
-
-
 
 
 }
