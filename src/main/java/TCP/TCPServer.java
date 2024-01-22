@@ -29,6 +29,9 @@ public class TCPServer {
         this.observers = new ArrayList<Observer>();
     }
 
+    /** starts listening on port 'port' for new connections
+     * launches a separate thread for each new connection
+     */
     public void start(int port) throws IOException{
 
         serverSocket = new ServerSocket(port);
@@ -53,6 +56,8 @@ public class TCPServer {
         server.start();
     }
 
+    /** stops listening on serverSocket
+     */
     public void stop() throws IOException{
         serverSocket.close();
     }
@@ -62,6 +67,8 @@ public class TCPServer {
     }
 
 
+    /** Thread to handle a single connection
+     */
     private class EchoClientHandler extends Thread {
         private Socket clientSocket;
         private PrintWriter out;

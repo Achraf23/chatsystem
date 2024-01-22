@@ -16,6 +16,13 @@ I used the following technologies to develop my ChatSystem application.
 * Reasons for using the swing library for the project : 
   * Easy to use : intuitive handling of the interactions between a frame and panels.
   * Had a previous experience with java swing 
+  
+  <br>
+* Reasons for using jdbc sql lite : 
+  * Easy to handle : simple query to retrieve a specific conversation from database rather than
+  managing conversations in a file
+  * Respects the specification document : to develop a decentralized ChatSystem, every has to be
+  local to the user rather than a database server
 
 ## Testing Policy
 * Network tests aim to test that TCPClient and TCPServer classes function properly. In other words, we make sure that

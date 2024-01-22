@@ -108,10 +108,7 @@ class EchoServer extends Thread {
                                     //Create new user in ContactList
                                     ContactList.getInstance().addContact(new Contact(received, packet.getAddress().getHostAddress()));
                                 }
-//                                String elt = received + "/" + packet.getAddress().toString();
-//                                if(ContactList.getInstance().removeContact(packet.getAddress().getHostAddress())){
-//                                        System.out.println("pseudo has changed: "+elt);
-//                                }
+
 
                             }
                         }

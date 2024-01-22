@@ -8,6 +8,9 @@ public class UsernamePanel extends JPanel {
     public JButton createIconButton;
     private JLabel nickname;
 
+    /** UsernamePanel Constructor
+     * panel containing the username and a button to change it
+     */
     public UsernamePanel(String username) {
 
         setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));

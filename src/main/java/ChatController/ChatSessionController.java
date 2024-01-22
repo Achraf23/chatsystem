@@ -18,6 +18,8 @@ public class ChatSessionController {
        void receivedMessageFromServer(String msg,Contact origin);
    }
 
+    /** launches the server and defines the observer
+     */
     public ChatSessionController() throws IOException{
         server = new TCPServer();
         server.addObserver(msg -> {
@@ -39,7 +41,8 @@ public class ChatSessionController {
         this.observers.add(obs);
     }
 
-
+    /** store msg in the database
+     */
     public static void storeMessage(TCPMessage msg,Contact contact) throws Exception{
        DatabaseManager db = DatabaseManager.getInstance();
        db.addMessageToDatabase(msg.content(),contact, msg.origin() == InetAddress.getLocalHost());

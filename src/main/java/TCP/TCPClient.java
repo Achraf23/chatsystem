@@ -18,20 +18,30 @@ public class TCPClient implements View.Observer{
     private Socket clientSocket;
     private PrintWriter out;
 
+    /** starts tcp connection with ip on the port 'port'
+     */
     public void startConnection(String ip, int port) throws IOException {
         clientSocket = new Socket(ip, port);
         out = new PrintWriter(clientSocket.getOutputStream(), true);
     }
 
+    /** send message msg to ip with which the connection
+     * has been established
+     */
     public void sendMessage(TCPMessage msg){
         out.println(msg.content());
     }
 
+    /** stops previously established connection
+     */
     public void stopConnection() throws IOException {
         out.close();
         clientSocket.close();
     }
 
+    /** Send message msg to recipient's ip
+     * when the view calls it
+     */
    @Override 
     public void sendMessage(String msg, Contact recipient){
         try {

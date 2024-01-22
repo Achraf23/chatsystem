@@ -36,7 +36,8 @@ public class ContactView extends JPanel implements ContactList.Observer, ActionL
         this.observers.add(obs);
     }
 
-
+    /** updates the current contactList on the screen
+     */
     void updateContactPanel(){
         removeAll();
         ArrayList<Contact> contactList = ContactList.getInstance().getTable();
@@ -50,14 +51,17 @@ public class ContactView extends JPanel implements ContactList.Observer, ActionL
         this.repaint();
     }
 
-
+    /** Updates contactList when contact is added
+     */
     @Override
     public void newContact(Contact contact) {
         updateContactPanel();
         for(Observer observer : observers)
             observer.changeConversationUsername(contact);
-    } // Works also for changing pseudo because we remove the contact and add a new one
+    }
 
+    /** Updates contactList when contact is removed
+     */
     @Override
     public void contactRemoved(Contact contact) {
         updateContactPanel();

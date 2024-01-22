@@ -67,6 +67,10 @@ public class View implements ContactView.Observer,LoginView.Observer,ChatSession
 
     }
 
+    /** shows the view with the right username when the connection
+     * has succeeded. The conversation view on the left
+     * remains empty as no conversation has been added
+     */
     public void initChatSession(String username){
         //Remove loginView
         frame.remove(loginView);
@@ -104,13 +108,17 @@ public class View implements ContactView.Observer,LoginView.Observer,ChatSession
     }
     public synchronized void addMainObserver(MainObserver obs){mainObserver = obs;}
 
-
+    /** Adds a new conversation to the Conversation array
+     */
     private void addConversation(ChatSessionView conversation){
         conversation.addObserver(this);
         conversations.add(conversation);
     }
 
-
+    /** returns the conversation with the right contact in the conversations
+     * array
+     * returns null if conversation not found
+     */
     private ChatSessionView getConversation(Contact contact){
         for(ChatSessionView conversation : conversations){
             if(conversation.contact.ip().equals(contact.ip()))
@@ -120,6 +128,9 @@ public class View implements ContactView.Observer,LoginView.Observer,ChatSession
         return null;
     }
 
+    /** returns a ChatSessionView containing the messages saved
+     * in the jdbc database with contact
+     */
     private ChatSessionView retrieveConversationFromDatabase(Contact contact) throws Exception{
         ArrayList<ChatSessionView.Message> messages = DatabaseManager.getInstance().retrieveAllMessages(contact);
         ChatSessionView conversation = new ChatSessionView(contact);
@@ -129,8 +140,12 @@ public class View implements ContactView.Observer,LoginView.Observer,ChatSession
         return conversation;
     }
 
+    /** Changes username on the screen
+     */
     public void changeUsername(String username){usernamePanel.setUsername(username);}
 
+    /** Shows the right stored conversation when contact is clicked
+     */
     @Override
     public void contactClicked(Contact contact) {
         if(activeConversation!=null)
@@ -161,6 +176,9 @@ public class View implements ContactView.Observer,LoginView.Observer,ChatSession
         frame.repaint();
     }
 
+    /** When a contact changes username, updates the
+     * contact in the right conversation
+     */
     @Override
     public void changeConversationUsername(Contact contact) {
         ChatSessionView conversation = getConversation(contact);
@@ -168,6 +186,9 @@ public class View implements ContactView.Observer,LoginView.Observer,ChatSession
             conversation.contact = contact;
     }
 
+    /** removes conversation with contact from the screen
+     * when the contact disconnects
+     */
     @Override
     public void endConversation(Contact contact) {
         ChatSessionView conversation = getConversation(contact);
@@ -184,6 +205,9 @@ public class View implements ContactView.Observer,LoginView.Observer,ChatSession
 
     }
 
+    /** Adds message received from the server to the right
+     * ChatSessionView and updates the panel
+     */
     @Override
     public void receivedMessageFromServer(String msg,Contact origin){
         ChatSessionView conversation = getConversation(origin);
@@ -192,6 +216,10 @@ public class View implements ContactView.Observer,LoginView.Observer,ChatSession
 
     }
 
+    /** When button send is clicked,
+     * transmits message to TCPClient to send it
+     * through the network
+     */
     @Override
     public void sentMessage(String msg, Contact recipient) {
         for (Observer obs : observers)
@@ -199,6 +227,9 @@ public class View implements ContactView.Observer,LoginView.Observer,ChatSession
 
     }
 
+    /** alert mainController to call
+     * tryConnection method from the discovery system
+     */
     @Override
     public void connectClicked(String username) {mainObserver.tryConnecting(username);}
 
