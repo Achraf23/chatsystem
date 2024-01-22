@@ -81,7 +81,7 @@ public class View implements ContactView.Observer,LoginView.Observer,ChatSession
             public void actionPerformed(ActionEvent e) {
                 // Show a dialog to get user input (blocking instruction)
                 String userInput = JOptionPane.showInputDialog("Change Username:");
-                if(userInput != null){
+                if(userInput != null && !userInput.isEmpty()){
                     mainObserver.changeUsername(userInput);
 
                 }

@@ -38,8 +38,11 @@ public class LoginView extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 // Handle connect button click event
                 String username = usernameField.getText();
-                for(Observer observer : observers)
-                    observer.connectClicked(username);
+                if(!username.isEmpty()){
+                    for(Observer observer : observers)
+                        observer.connectClicked(username);
+                }
+
             }
         });
 
