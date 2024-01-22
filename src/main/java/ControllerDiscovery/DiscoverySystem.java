@@ -86,15 +86,6 @@ public class DiscoverySystem implements View.Observer {
 
     }
 
-    @Override
-    public void changeUsername(String username) {
-        try {
-            System.out.println("observer discovery method");
-            changePseudo(username);
-        }catch (IOException e){
-            System.out.println("Change pseudo error: " + e);
-        }
-    }
 
 
 }

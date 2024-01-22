@@ -14,6 +14,7 @@ public class View implements ContactView.Observer,LoginView.Observer,ChatSession
     ContactView contactView;
     LoginView loginView;
     ChatSessionView activeConversation;
+    UsernamePanel usernamePanel;
     ArrayList<ChatSessionView> conversations;
     ArrayList<View.Observer> observers = new ArrayList<View.Observer>();
     MainObserver mainObserver;
@@ -24,13 +25,12 @@ public class View implements ContactView.Observer,LoginView.Observer,ChatSession
 
     public interface Observer {
         void sendMessage(String msg, Contact recipient);
-        void changeUsername(String username);
-
     }
 
     public interface MainObserver{
         void tryConnecting(String username);
         void disconnect();
+        void changeUsername(String username);
     }
 
     public static void showWarningDialog() {
@@ -71,16 +71,14 @@ public class View implements ContactView.Observer,LoginView.Observer,ChatSession
         //Remove loginView
         frame.remove(loginView);
 
-        UsernamePanel usernamePanel = new UsernamePanel(username);
+        usernamePanel = new UsernamePanel(username);
         usernamePanel.createIconButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Show a dialog to get user input (blocking instruction)
                 String userInput = JOptionPane.showInputDialog("Change Username:");
                 if(userInput != null){
-                    usernamePanel.setUsername(userInput);
-                    for(Observer observer : observers)
-                        observer.changeUsername(userInput);
+                    mainObserver.changeUsername(userInput);
 
                 }
 
@@ -131,6 +129,8 @@ public class View implements ContactView.Observer,LoginView.Observer,ChatSession
         return conversation;
     }
 
+    public void changeUsername(String username){usernamePanel.setUsername(username);}
+
     @Override
     public void contactClicked(Contact contact) {
         if(activeConversation!=null)
@@ -171,14 +171,16 @@ public class View implements ContactView.Observer,LoginView.Observer,ChatSession
     @Override
     public void endConversation(Contact contact) {
         ChatSessionView conversation = getConversation(contact);
-        if(conversation == activeConversation){
-            frame.remove(activeConversation);
-            frame.repaint();
-            frame.revalidate();
-        }else {
-            if(conversation != null)
-                conversations.remove(conversation);
+        if(conversation !=null){
+            if(conversation == activeConversation){
+                frame.remove(activeConversation);
+                frame.repaint();
+                frame.revalidate();
+            }
+
+            conversation.remove(conversation);
         }
+
 
     }
 

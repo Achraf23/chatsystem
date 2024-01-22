@@ -55,5 +55,16 @@ public class MainController implements View.MainObserver {
         }
     }
 
+    @Override
+    public void changeUsername(String username) {
+        try {
+            System.out.println("observer discovery method");
+            discovery.changePseudo(username);
+            view.changeUsername(username);
+        }catch (IOException e){
+            View.showWarningDialog();
+        }
+    }
+
 
 }

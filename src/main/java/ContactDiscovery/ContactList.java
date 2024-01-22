@@ -96,5 +96,16 @@ public class ContactList {
 
     public ArrayList<Contact> getTable(){return table;}
 
+    public void changeUsername(Contact contactParam){
+        Contact foundContact = contactList.table.stream().filter(contact -> contact.ip().equals(contactParam.ip())).findFirst().orElse(null);
+        if(foundContact != null){
+            ContactList.getInstance().table.remove(foundContact);
+            ContactList.getInstance().addContact(contactParam);
+        }
+
+
+
+    }
+
 
 }
