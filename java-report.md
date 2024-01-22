@@ -26,7 +26,8 @@ I used the following technologies to develop my ChatSystem application.
 
 ## Testing Policy
 * Network tests aim to test that TCPClient and TCPServer classes function properly. In other words, we make sure that
-we receive the right messages after sending them with TCPClient to TCPServer
+we receive the right messages after sending them with TCPClient to TCPServer. The same is done for
+UDPServer and UDPClient.
 
 
 * For database management, we need two things, add messages to the database and retrieve them when stating a conversation.
@@ -41,3 +42,7 @@ the chat controller. <br>
 We can see that MainController is never referenced in the classes that he uses. 
 Moreover, the classes that are used by the View interact with the View via observers. 
 The same can be said about ChatController (TCPServer interacts with ChatController via an observer). 
+
+The classes that I want to highlight are TCPServer and TCPClient. They're concise and 
+clear. TCPServer only listens on a port and can handle several connections at the same time.
+The messages received aren't handled in the class but through an observer as it should be done.
