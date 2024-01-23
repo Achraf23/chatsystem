@@ -26,7 +26,7 @@ in DatabaseManager class.
 
 
 ## Instruction to compile the ChatSystem app
-    mvn compile
+    mvn package
 
 ## How to execute ChatSystem
     mvn exec:java -Dexec.mainClass="MainController" 
